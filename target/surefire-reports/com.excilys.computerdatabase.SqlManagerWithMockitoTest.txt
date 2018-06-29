@@ -1,0 +1,40 @@
+-------------------------------------------------------------------------------
+Test set: com.excilys.computerdatabase.SqlManagerWithMockitoTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.042 sec <<< FAILURE! - in com.excilys.computerdatabase.SqlManagerWithMockitoTest
+com.excilys.computerdatabase.SqlManagerWithMockitoTest.testGetComputer()  Time elapsed: 0.042 sec  <<< FAILURE!
+java.lang.IllegalStateException: Could not initialize plugin: interface org.mockito.plugins.MockMaker (alternate: null)
+	at org.mockito.internal.configuration.plugins.PluginLoader$1.invoke(PluginLoader.java:74)
+	at com.sun.proxy.$Proxy1.isTypeMockable(Unknown Source)
+	at org.mockito.internal.util.MockUtil.typeMockabilityOf(MockUtil.java:29)
+	at org.mockito.internal.util.MockCreationValidator.validateType(MockCreationValidator.java:22)
+	at org.mockito.internal.creation.MockSettingsImpl.validatedSettings(MockSettingsImpl.java:232)
+	at org.mockito.internal.creation.MockSettingsImpl.build(MockSettingsImpl.java:226)
+	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:64)
+	at org.mockito.Mockito.mock(Mockito.java:1871)
+	at org.mockito.Mockito.mock(Mockito.java:1780)
+	at com.excilys.computerdatabase.SqlManagerWithMockitoTest.testGetComputer(SqlManagerWithMockitoTest.java:19)
+Caused by: java.lang.NoClassDefFoundError: net/bytebuddy/dynamic/loading/ClassInjector$UsingReflection
+	at org.mockito.internal.creation.bytebuddy.SubclassInjectionLoader.<init>(SubclassInjectionLoader.java:28)
+	at org.mockito.internal.creation.bytebuddy.SubclassByteBuddyMockMaker.<init>(SubclassByteBuddyMockMaker.java:33)
+	at org.mockito.internal.creation.bytebuddy.ByteBuddyMockMaker.<init>(ByteBuddyMockMaker.java:21)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at java.lang.Class.newInstance(Class.java:442)
+	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.create(DefaultMockitoPlugins.java:66)
+	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.getDefaultPlugin(DefaultMockitoPlugins.java:43)
+	at org.mockito.internal.configuration.plugins.PluginLoader.loadPlugin(PluginLoader.java:67)
+	at org.mockito.internal.configuration.plugins.PluginLoader.loadPlugin(PluginLoader.java:44)
+	at org.mockito.internal.configuration.plugins.PluginRegistry.<init>(PluginRegistry.java:21)
+	at org.mockito.internal.configuration.plugins.Plugins.<clinit>(Plugins.java:18)
+	at org.mockito.internal.util.MockUtil.<clinit>(MockUtil.java:24)
+	... 19 more
+Caused by: java.lang.ClassNotFoundException: net.bytebuddy.dynamic.loading.ClassInjector$UsingReflection
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 34 more
+
