@@ -1,124 +1,43 @@
 package com.excilys.computerdatabase.model;
 
 import java.sql.Date;
-import java.sql.SQLException;
 
-import com.excilys.computerdatabase.service.SqlManager;
+
 
 
 
 /**
  * @author Yann
  * @
- *
+ * 
  */
 public class Computer {
-	private int id;
+	private long id;
 	private String name;
 	private Company company;
 	private Date introduced;
 	private Date discontinued;
-	
-	private static Integer biggerID ;
-	
-	public Computer(int id, String name) {
-		this.id = id;
-		this.name = name;
-		
-		if (biggerID == null || biggerID < id ) {
-			biggerID = id;
-		}
-	}
-	
+
 	
 	public Computer() {
-		
-		
-	}
-	
-	public Computer(int id, String name, Company companie) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.company = companie;
-		if (biggerID == null || biggerID < id ) {
-			biggerID = id;
-		}
 	}
 
-
-
-	public Computer(int id, String name, Date introduced) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		if (biggerID == null || biggerID < id ) {
-			biggerID = id;
-		}
-	}
-
-
-
-	public Computer(int id, String name, Date introduced, Date discotinued) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discotinued;
-		if (biggerID == null || biggerID < id ) {
-			biggerID = id;
-		}
-	}
-
-
-
-	public Computer(int id, String name, Company companie, Date introduced) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.company = companie;
-		this.introduced = introduced;
-		if (biggerID == null || biggerID < id ) {
-			biggerID = id;
-		}
-	}
-
-
-
-	public Computer(int id, String name, Company companie, Date introduced, Date discotinued) {
+	public Computer(long id, String name, Company companie, Date introduced, Date discotinued) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.company = companie;
 		this.introduced = introduced;
 		this.discontinued = discotinued;
-		if (biggerID == null || biggerID < id ) {
-			biggerID = id;
-		}
+		
 	}
 
 	public Computer( String name, Company companie, Date introduced, Date discotinued) {
-//		super();
-//		if (biggerID == null) {
-//			SqlManager manager;
-//			try {
-//				manager = SqlManager.getInstance();
-//				manager.getComputers();
-//			} catch (SQLException e) {
-//				System.err.println(e);
-//			}
-//			
-//		}
-//		this.id = biggerID +1;
-//		this.id = 0;
+		this.id = 0;
 		this.name = name;
 		this.company = companie;
 		this.introduced = introduced;
 		this.discontinued = discotinued;
-		
-		biggerID = id;
-
 	}
 
 	public String getName() {
@@ -153,19 +72,13 @@ public class Computer {
 		this.discontinued = discotinued;
 	}
 
-
-
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-
-
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-
-
 
 	@Override
 	public String toString() {
@@ -173,6 +86,17 @@ public class Computer {
 				+ ", discontinued=" + discontinued + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
 
 
 	@Override

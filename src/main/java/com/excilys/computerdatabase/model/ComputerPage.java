@@ -3,13 +3,14 @@ package com.excilys.computerdatabase.model;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.excilys.computerdatabase.service.SqlManager;
+import com.excilys.computerdatabase.service.ComputerService;
+
 
 
 public class ComputerPage {
 
 	int numberPerPage;
-	int currentId;
+	Long currentId;
 	ArrayList<Computer> page;
 	ComputerPage nextPage;
 	ComputerPage previousPage;
@@ -21,14 +22,11 @@ public class ComputerPage {
 	}
 	
 
-	public int getNumberOfPage() {
-		return numberOfPage;
-	}
 
 
 
 
-	public ComputerPage(int numberPerPage, int currentId) throws SQLException {
+	public ComputerPage(int numberPerPage, Long currentId) {
 		this.numberPerPage = numberPerPage;
 		this.currentId = currentId;
 		page = nextPage();
@@ -36,7 +34,7 @@ public class ComputerPage {
 		numberOfPage = 0;
 	}
 
-	public ComputerPage(int numberPerPage, int currentId, ArrayList<Computer> page,int numberOfPage) {
+	public ComputerPage(int numberPerPage, Long currentId, ArrayList<Computer> page,int numberOfPage) {
 		this.numberPerPage = numberPerPage;
 		this.currentId = currentId;
 		this.page = page;
@@ -44,10 +42,10 @@ public class ComputerPage {
 	}
 
 
-	public ComputerPage getNextPage() throws SQLException {
+	public ComputerPage getNextPage(){
 		if (nextPage == null) {
 			ArrayList<Computer> newPage = this.nextPage();
-			if (nextPage != null) {
+			if (!newPage.isEmpty()) {
 				nextPage = new ComputerPage(this.numberPerPage,currentId, newPage, numberOfPage+1 );
 				nextPage.setPreviousPage(this);
 				return nextPage;
@@ -60,10 +58,13 @@ public class ComputerPage {
 			return nextPage;
 		}
 	}
+	
 
-	public void setNextPage(ComputerPage nextPage) {
-		this.nextPage = nextPage;
+	public int getNumberOfPage() {
+		return numberOfPage;
 	}
+
+	
 
 	public ComputerPage getPreviousPage() {
 		return previousPage;
@@ -73,18 +74,10 @@ public class ComputerPage {
 		this.previousPage = previousPage;
 	}
 
-	/**
-	 * return 10 computers. If nextPage had been already call, return 10 computer after the previous 10. And so on.
-	 * @return 10 computers
-	 * @throws SQLException
-	 */
-	public ArrayList<Computer> nextPage() throws SQLException {
-		if (page == null) {
-			SqlManager manager = SqlManager.getInstance();
-			page = manager.getComputers(numberPerPage, currentId);
-		}
-		ArrayList<Computer> resultPage =page;
-		page = null;
+	
+	private ArrayList<Computer> nextPage() {
+			ComputerService computerService =  ComputerService.getInstance();
+			ArrayList<Computer> resultPage = computerService.getAll(numberPerPage, currentId);
 		for (Computer c : resultPage) {
 			if (currentId < c.getId())
 				currentId = c.getId();
@@ -93,15 +86,9 @@ public class ComputerPage {
 	}
 
 
-	/**
-	 * give true is is exist computers which are not been given. If true, stock the 10 first computers in page
-	 * @return true if computer exist
-	 * @throws SQLException
-	 */
-	public boolean hasNext() throws SQLException {
-		SqlManager manager = SqlManager.getInstance();
-		page = manager.getComputers(numberPerPage, currentId);
-		return  page != null;
+	public boolean hasNext(){
+		getNextPage();
+		return nextPage != null;
 	}
 
 	public ArrayList<Computer> getPage() {

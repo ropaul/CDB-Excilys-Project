@@ -7,6 +7,6 @@ public class Constant {
 	public  static final String INTRODUCED = "introduced";
 	public  static final String DISCONTINUED = "discontinued";
 	public  static final String COMPAGNYID = "company_id";
-	public final static int NB_PAGE = 10;
+	public final static int NB_PAGE = 50;
 
 }

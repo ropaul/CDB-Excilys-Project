@@ -9,66 +9,60 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.service.SqlManager;
+import com.excilys.computerdatabase.service.CompanyService;
+import com.excilys.computerdatabase.service.ComputerService;
 
 import junit.framework.TestCase;
 
 public class SqlManagerTest extends TestCase {
 
-	SqlManager manager;
+
 	Logger log;
+	ComputerService computerService;
+	CompanyService companyService;
 
-	
-	
 
 
- 
 
-	
+
+
+
+
 	protected void setUp() {
 		log = LoggerFactory.getLogger(this.getClass());
-		try {
-			manager = SqlManager.getInstance();
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-		}
-//		MockitoAnnotations.initMocks(this);
+		computerService = ComputerService.getInstance();
+		companyService = CompanyService.getInstance();
+
+		//		MockitoAnnotations.initMocks(this);
 	}
 
 	protected void tearDown() {
-		manager = null;
+		companyService = null;
+		computerService = null;
 		log = null;
 	}
 
 	public void testGetComputerTrue() {
 		Computer computer = null;
-		try {
-			computer = manager.getComputer(1);
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-		}
+		computer = computerService.get(1);
 		assertTrue(computer != null);
 	}
-	
+
 	public void testGetCompanyTrue() {
 		Company company = null;
-		try {
-			company = manager.getCompany(1);
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-		}
+
+		company = companyService.get(1);
+
 		assertTrue(company != null);
 	}
-	
-	
+
+
 	public void testGetCompanyFalse() {
 		Company company = null;
 		int id = 10000;
-		try {
-			company = manager.getCompany(id);
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-		}
+
+		company = companyService.get(id);
+
 		assertTrue(company == null);
 	}
 
@@ -77,12 +71,7 @@ public class SqlManagerTest extends TestCase {
 	public void testGetComputerWithException() {
 		Computer computer = null;
 
-		try {
-			computer = manager.getComputer(-1);
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-
-		}
+		computer = computerService.get(-1);
 		assertTrue(computer == null);
 
 
@@ -91,96 +80,74 @@ public class SqlManagerTest extends TestCase {
 
 	public void testGetComputersTrue() {
 		ArrayList<Computer> computers = null;
-		try {
-			computers = manager.getComputers();
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-		}
+		computers = computerService.getAll();
 		assertTrue(computers != null);
 	}
-	
+
 	public void testGetComputerFalse() {
 		int id = 10000;
-		
-		try {
-			Computer computer = manager.getComputer(id);
-			assertTrue(computer == null);
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-		}
-		
+
+		Computer computer = computerService.get(id);
+		assertTrue(computer == null);
+
+
 	}
-	
-	
-	
+
+
+
 
 
 	public void testGetCompaniesTrue() {
 		ArrayList<Company> companies = null;
-		try {
-			companies = manager.getCompanies();
-		} catch (SQLException e) {
-			log.error("Error occrured:{}",e );
-		}
+		companies = companyService.getAll();
+
 		assertTrue(companies != null);
 	}
 
 	public void testCreateThenDeleteComputer() {
 		int id = 10001;
-		Computer computer = new Computer(id, "le test",Date.valueOf("1990-01-01"), Date.valueOf("1995-12-31"));
-		try {
-			manager.createComputer(computer);
-			Computer testComputer = manager.getComputer(id);
-			assertTrue(testComputer != null);
-			assertEquals(computer,testComputer);
-			manager.deleteComputer(testComputer);
+		Computer computer = new Computer(id, "le test",null,Date.valueOf("1990-01-01"), Date.valueOf("1995-12-31"));
 
-		}
-		catch (SQLException e) {
-			log.error("Error occrured:" +e );
-		}
+		computerService.add(computer);
+		Computer testComputer = computerService.get(id);
+		assertTrue(testComputer != null);
+		assertEquals(computer,testComputer);
+		computerService.delete(testComputer);
+
+
 
 	}
-	
+
 	public void testUpdateComputer() {
 		int id = 10002;
-		
-		Computer computer = new Computer(id, "le test",Date.valueOf("1990-01-01"), Date.valueOf("1995-12-31"));
-		try {
-			manager.deleteComputer(id);
-			manager.createComputer(computer);
-			String name = "update du test";
-			computer.setName(name);
-			assertEquals(name, computer.getName());
-			manager.updateComputer(computer);
-			Computer testComputer = manager.getComputer(computer.getId()); 
-			assertEquals(name, testComputer.getName());
-			manager.deleteComputer(testComputer);
 
-		}
-		catch (SQLException e) {
-			log.error("Error occrured:" +e );
-		}
+		Computer computer = new Computer(id, "le test",null,Date.valueOf("1990-01-01"), Date.valueOf("1995-12-31"));
+		computerService.delete(id);
+		computerService.add(computer);
+		String name = "update du test";
+		computer.setName(name);
+		assertEquals(name, computer.getName());
+		computerService.update(computer);
+		Computer testComputer = computerService.get(computer.getId()); 
+		assertEquals(name, testComputer.getName());
+		computerService.delete(testComputer);
+
 
 	}
-	
-	
+
+
 	public void testUpdateComputerWhichDoesntExist() {
 		int id = 10003;
-		
-		Computer computer = new Computer(id, "le test",Date.valueOf("1990-01-01"), Date.valueOf("1995-12-31"));
-		try {
-			String name = "update du test";
-			computer.setName(name);
-			assertEquals(name, computer.getName());
-			manager.updateComputer(computer);
-			Computer testComputer = manager.getComputer(computer.getId()); 
-			assertTrue( testComputer == null);
-		}
-		catch (SQLException e) {
-			log.error("Error occrured:" +e );
-		}
+
+		Computer computer = new Computer(id, "le test",null,Date.valueOf("1990-01-01"), Date.valueOf("1995-12-31"));
+		String name = "update du test";
+		computer.setName(name);
+		assertEquals(name, computer.getName());
+		computerService.update(computer);
+		Computer testComputer = computerService.get(computer.getId()); 
+		assertTrue( testComputer == null);
+
 
 	}
-	
+
 }

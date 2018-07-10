@@ -1,0 +1,8 @@
+config/*
+.classpath
+.project
+.settings/*
+target/classes/com/excilys/computerdatabase/*
+
+
+/target/

@@ -3,7 +3,7 @@ package com.excilys.computerdatabase.model;
 public class Company {
 	
 	private String name;
-	private int id;
+	private long id;
 	
 	public Company() {
 		
@@ -28,11 +28,11 @@ public class Company {
 		return "Companie [name=" + name + ", id=" + id + "]";
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	
