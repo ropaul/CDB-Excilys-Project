@@ -51,17 +51,19 @@ public class ComputerDao {
 		ArrayList<Computer>  computersList = new ArrayList<Computer>();
 		ArrayList<Company> companies;
 		CompanyDao companySql = CompanyDao.getInstance();
+		Connection conn = null;
 		try {
 			companies = companySql.getAll();
 			HashMap<Long, Company> companyPerID = new HashMap<Long, Company>();
 			for (Company company: companies) {
 				companyPerID.put(company.getId(), company);
 			}
-			Connection conn = HikariCP.getInstance().getConnection();;
+			 conn = HikariCP.getInstance().getConnection();;
 			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			logger.info("Connection to get all the computers");
 
 			ResultSet result =  state.executeQuery(query);
+			conn.commit();
 			result.first();
 
 			ComputerFactory usineChinoise = new ComputerFactory();
@@ -77,7 +79,14 @@ public class ComputerDao {
 			state.close();
 			conn.close();
 		} catch (SQLException e) {
-			logger.error("can't find all the computers");
+			try {
+				conn.rollback();
+				conn.close();
+			} catch (SQLException e1) {
+				logger.error("Can't do the rollback: " + e.getMessage());
+			}
+			logger.error(e.getMessage());
+			
 		}
 
 		return computersList;
@@ -96,10 +105,7 @@ public class ComputerDao {
 		return getAll(query);
 	}
 
-	public ArrayList<Computer> search(String name){
-		String query = "SELECT * FROM computer WHERE " + Constant.NAME + " LIKE '%" + name + "%' " ;
-		return getAll(query);
-	}
+
 	
 	public ArrayList<Computer> search(String name, int number, Long idBegin){
 		String query = "SELECT * FROM computer WHERE " + Constant.NAME + " LIKE '%" + name + "%' AND"  + Constant.ID + " >" + idBegin + " LIMIT " + number ;
@@ -132,7 +138,6 @@ public class ComputerDao {
 			query += " OR " +Constant.NAME + " LIKE '%" + nameComputer + "%'"; 
 		}
 		query += " LIMIT " + number;
-		System.out.println(query);
 		return getAll(query);
 	}
 	
@@ -163,19 +168,8 @@ public class ComputerDao {
 		else { query = "INSERT INTO computer  (name, introduced, discontinued, company_id) VALUES ( '" 
 				+ name + "'," + introduced  + "," + discontinued + "," + companyId + ")";
 		}
-		Statement state;
-		try {
-			Connection conn = HikariCP.getInstance().getConnection();;
-			state = conn.createStatement();
-			logger.info("Connection to add the computer id ="+ id);
-			state.executeUpdate(query);
-			state.close();
-			conn.close();
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
-
-		return true;
+		return HikariCP.getInstance().commit(query);
+		
 	}
 
 	
@@ -203,19 +197,9 @@ public class ComputerDao {
 				Constant.DISCONTINUED +" = "  + discontinued + ", " +
 				Constant.COMPAGNYID +" = "  + companyId +" " +
 				"WHERE " +  Constant.ID +" in ("  + oldId +");";
-		Statement state;
-		try {
-			Connection conn = HikariCP.getInstance().getConnection();;
-			state = conn.createStatement();
-			logger.info("Connection to create the computer id = " + companyId);
-			state.executeUpdate(query);
-			state.close();
-			conn.close();
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
+		return HikariCP.getInstance().commit(query);
 
-		return true;
+	
 	}
 
 
@@ -225,19 +209,7 @@ public class ComputerDao {
 
 	public Boolean delete(long id) {
 		String query = "DELETE FROM computer  WHERE id = " + id ;
-		try {
-			Connection conn = HikariCP.getInstance().getConnection();;
-			Statement state;
-			state = conn.createStatement();
-			logger.info("Connection to delete the computer id = " + id);
-			state.executeUpdate(query);
-			state.close();
-			conn.close();
-			return true;
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
-		return false;
+		return HikariCP.getInstance().commit(query);
 	}
 
 
@@ -306,11 +278,5 @@ public class ComputerDao {
 
 	}
 	
-	
-public static void main(String[] args) {
-	ComputerDao c = ComputerDao.getInstance();
-	ArrayList<Computer> result = c.search("apple", "", 10, 0L);
-	System.out.println(result);
-}
 
 }

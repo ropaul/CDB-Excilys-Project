@@ -90,13 +90,13 @@ public class Dashboard extends HttpServlet {
 
 		}
 		else {
-			System.out.println("!!paramsearch  =" + paramSearch);
 			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L);
 		}
 
 		request.setAttribute( "computers", page.getPage() );
 		request.setAttribute( "nbComputers", computers.size() );
 		request.setAttribute( "numeropage", page.getNumberOfPage() );
+		request.setAttribute( "search", paramSearch );
 
 		this.getServletContext().getRequestDispatcher( "/static/jsp/dashboard.jsp" ).forward( request, response );
 	}

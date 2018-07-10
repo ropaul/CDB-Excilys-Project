@@ -7,11 +7,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdatabase.Constant;
 import com.excilys.computerdatabase.model.Company;
+import com.excilys.computerdatabase.model.Computer;
 
 public class CompanyDao {
 
@@ -46,12 +48,13 @@ public class CompanyDao {
 	
 	private ArrayList<Company> getAll(String query){
 		ArrayList<Company>  companyList = new ArrayList<Company>();
-		Connection conn;
+		Connection conn = null;
 		try {
 			conn = HikariCP.getInstance().getConnection();  //DriverManager.getConnection(url, "root", "root");
 			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			logger.info("Connection to get all the companies.");
 			ResultSet result =  state.executeQuery(query);
+			conn.commit();
 			result.first();
 			do{
 
@@ -60,7 +63,14 @@ public class CompanyDao {
 			state.close();
 			conn.close();
 		} catch (SQLException e) {
+			try {
+				conn.rollback();
+				conn.close();
+			} catch (SQLException e1) {
+				logger.error("Can't do the rollback: " + e.getMessage());
+			}
 			logger.error(e.getMessage());
+			
 		}
 		
 		return companyList;
@@ -81,13 +91,14 @@ public class CompanyDao {
 	}
 
 	public Optional<Company> get(long companyID){
-		Connection conn;
+		Connection conn =  null;
 		try {
 			conn = HikariCP.getInstance().getConnection();;
 			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			logger.info("Connection to get the company with id =" + companyID);
 			String query = "SELECT * FROM company Where id =" + companyID;
 			ResultSet result =  state.executeQuery(query);
+			conn.commit();
 			Company companyResult;
 			if (result.first()) {
 				result.first();
@@ -101,17 +112,45 @@ public class CompanyDao {
 			
 			
 		} catch (SQLException e) {
-			logger.error("company not found. id  = " + companyID);
-			return Optional.empty();
+			try {
+				conn.rollback();
+				conn.close();
+			} catch (SQLException e1) {
+				logger.error("Can't do the rollback: " + e.getMessage());
+			}
+			logger.error(e.getMessage());
+			
 		}
 		return Optional.empty();
 	}
 	
-	public static void main(String args[]) {
-		CompanyDao c = CompanyDao.getInstance();
-		System.out.println(c.search("apple"));
+	
+	
+	public boolean delete(Company company) {
+		ComputerDao computerDao = ComputerDao.getInstance();
+		ArrayList<Computer> allComputerOfTheCompany = computerDao.search("",company.getName(),Integer.MAX_VALUE, 0L);
+		for (Computer computer : allComputerOfTheCompany) {
+			System.out.println("on supprime ça : " + computer);
+			computerDao.delete(computer);
+		}
+		String query =  "DELETE FROM company  WHERE id = " + company.getId();
+		return HikariCP.getInstance().commit(query);
+ 	}
+	
+	public boolean delete(Long id) {
+		return delete(this.get(id).orElse(null));
+		
 	}
 
+	
+public static void main(String[] args) {
+		CompanyDao cd = CompanyDao.getInstance();
+		Company company = cd.get(1L).orElse(null);
+		
+		cd.delete(company);
+		System.out.println(company);
+	}
+	
 }
 
 

@@ -28,9 +28,8 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
-
 						 <input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" /> <a id="search" href="dashboard"><input
+							class="form-control" placeholder="Search name" value = "${seach}"/> <a id="search" href="dashboard"><input
 							type="submit" id="searchsubmit"  value="Filter by name"
 							class="btn btn-primary" />
 							</a>
@@ -64,6 +63,7 @@
 						<th>Introduced date</th>
 						<th>Discontinued date</th>
 						<th>Company</th>
+						<th class="editMode" style="width: 60px; height: 22px;"> delete company </th>
 
 					</tr>
 				</thead>
@@ -77,7 +77,12 @@
 							<td><a href="editComputer?computerId=${computer.id}" onclick="">${computer.name}</a></td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>
-							<td>${computer.company.name}</td>
+							<td>${computer.company.name} </td>
+							<td class="editMode" style="width: 60px; height: 22px;"><span
+							style="vertical-align: top;"><a href="delete"
+								id="deleteSelectedCompany" onclick="$.fn.deleteSelectedCompany();"> <i 
+									class="fa fa-trash-o fa-lg"><input type="hidden" name="cbcompany"
+								class="cbcompany" value="${computer.company.id}"></i></a></span></td>
 						</tr>
 					</c:forEach>
 

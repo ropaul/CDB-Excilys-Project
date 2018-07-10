@@ -34,6 +34,7 @@ public class HikariCP {
 		config.addDataSourceProperty( "cachePrepStmts" , "true" );
 		config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
 		config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+		config.setAutoCommit(false);
 		ds = new HikariDataSource( config );
 	
 	}
@@ -57,23 +58,30 @@ public class HikariCP {
 		return ds.getConnection();
 	}
 
-	public static void main(String[] args) throws SQLException {
-		HikariCP hikari =  HikariCP.getInstance();
-		int  companyID = 1;
-
-
-		Connection conn = hikari.getConnection();
-		Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
-		String query = "SELECT * FROM company Where id =" + companyID;
-		ResultSet result =  state.executeQuery(query);
-		Company companyResult;
-		if (result.first()) {
-			System.out.println(result);
-			companyResult = new Company(result.getInt(Constant.ID), result.getString(Constant.NAME));
-			System.out.println(companyResult);
+	
+	public boolean commit(String query) {
+		Statement state;
+		Connection conn = null;
+		try {
+			conn = HikariCP.getInstance().getConnection();;
+			state = conn.createStatement();
+			state.executeUpdate(query);
 			state.close();
 			conn.close();
+			return true;
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+				conn.close();
+				logger.error("Can't commit but can do rollback: " + e.getMessage());
+				return false;
+				
+			} catch (SQLException e1) {
+				logger.error("Can't do the rollback: " + e1.getMessage());
+				return false;
+			}
 		}
 	}
+	
+	
 }

@@ -13,10 +13,12 @@ public class CompanyService {
 	
 	private static CompanyService INSTANCE;
 	private Logger logger;
+	CompanyDao companySql;
 	
 	private CompanyService() 
 	{
 		logger = LoggerFactory.getLogger(CompanyService.class);
+		companySql = CompanyDao.getInstance();
 	}
 
 	public static CompanyService getInstance() 
@@ -33,18 +35,19 @@ public class CompanyService {
 	}
 	
 	public ArrayList<Company> getAll(){
-		CompanyDao companySql = CompanyDao.getInstance();
 		return companySql.getAll();
 		
 	}
 
 	public Company get(long id) {
-		CompanyDao companySql = CompanyDao.getInstance();
+		
 		return companySql.get(id).orElse(new Company());
 		
 	}
 	
-	
+	public boolean delete(Company company) {
+		return companySql.delete(company);
+	}
 	
 	
 }

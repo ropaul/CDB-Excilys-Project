@@ -37,7 +37,6 @@ public class ComputerPage {
 		previousPage =  null;
 		numberOfPage = 0;
 		
-		System.out.println("in computerpage  " + this.searchCompany +"  "+ searchComputer );
 	}
 
 	public ComputerPage(String searchComputer, String searchCompany, int numberPerPage, Long currentId, ArrayList<Computer> page,int numberOfPage) {
