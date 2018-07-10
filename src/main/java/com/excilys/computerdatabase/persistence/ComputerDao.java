@@ -107,19 +107,35 @@ public class ComputerDao {
 	}
 		
 	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin){
+		System.out.println(nameCompany + "     " +  nameComputer);
 		CompanyDao computerDAO = CompanyDao.getInstance();
-		ArrayList<Company> companies = computerDAO.search(nameCompany);
-		int[] idCompany = new int[companies.size()];
-		for (int i = 0;  i< companies.size(); i++) {
-			idCompany[i] = (int) companies.get(i).getId();
+		String query = "SELECT * FROM computer";
+		if ((nameCompany != null && nameCompany != "") ||
+				(nameComputer != null && nameComputer != "")||
+				(number != 0 || idBegin != 0)) {
+			query+=" WHERE " + Constant.ID + " > " + idBegin ;
 		}
-		System.out.println(idCompany);
-		String query = "SELECT * FROM computer WHERE " + 
-				Constant.NAME + " LIKE '%" + nameComputer + "%'"+
-				" AND"  + Constant.ID + " >" + idBegin + " LIMIT " + number +
-				"AND company_id in" + idCompany + " LIMIT " + number;
+		else {
+			return getAll(query);
+		}
+		if ((nameCompany != null && nameCompany != "")) {
+		ArrayList<Company> companies = computerDAO.search(nameCompany);
+		String idCompany = "(";
+		for (int i = 0;  i< companies.size(); i++) {
+			idCompany += (int) companies.get(i).getId() + ", ";
+		}
+		idCompany = idCompany.substring(0, idCompany.length() -2) ;
+		idCompany += ")";
+		query += " AND company_id in " + idCompany ;
+		}
+		if (nameComputer != null && nameComputer != "") {
+			query += " OR " +Constant.NAME + " LIKE '%" + nameComputer + "%'"; 
+		}
+		query += " LIMIT " + number;
+		System.out.println(query);
 		return getAll(query);
 	}
+	
 	public Boolean add(Computer c){
 		long id = c.getId();
 		String name = c.getName();
@@ -292,8 +308,9 @@ public class ComputerDao {
 	
 	
 public static void main(String[] args) {
-	ComputerDao computerd = ComputerDao.getInstance();
-	System.out.println(computerd.getAll(10, 1000L));
-	}
+	ComputerDao c = ComputerDao.getInstance();
+	ArrayList<Computer> result = c.search("apple", "", 10, 0L);
+	System.out.println(result);
+}
 
 }

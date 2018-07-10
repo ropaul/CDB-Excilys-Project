@@ -25,6 +25,7 @@ public class CompanyService {
 			synchronized(CompanyService.class){
 				if (INSTANCE == null){
 					INSTANCE = new CompanyService();
+					INSTANCE.logger.info("new instance of CompanyService");
 				}
 			}
 		}
@@ -42,4 +43,8 @@ public class CompanyService {
 		return companySql.get(id).orElse(new Company());
 		
 	}
+	
+	
+	
+	
 }

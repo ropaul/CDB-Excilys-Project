@@ -23,23 +23,22 @@ import com.excilys.computerdatabase.service.ComputerService;
 @WebServlet("/dashboard")
 public class Dashboard extends HttpServlet {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private ComputerPage page;
 	private int nbPage = Constant.NB_PAGE;
-	
+
 
 	public void doGet( HttpServletRequest request, HttpServletResponse response )
 			throws ServletException, IOException{
 
-		String paramPage = request.getParameter( "page" );
-		String paramNbPerPage = request.getParameter( "perpage" );
+		String paramPage = request.getParameter("page");
+		String paramNbPerPage = request.getParameter("perpage");
+		String paramSearch = request.getParameter("search");
+
 		Logger logger = LoggerFactory.getLogger(Dashboard.class);
-		
+
 		if (paramNbPerPage != null) {
-			System.err.println(paramNbPerPage);
 			nbPage =  Integer.parseInt(paramNbPerPage);
 		}
 
@@ -47,52 +46,53 @@ public class Dashboard extends HttpServlet {
 		ComputerService computerService =  ComputerService.getInstance();
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 
-			computers = computerService.getAll();
+		computers = computerService.getAll();
 
-			if (paramPage != null) {
-				
-				page = new ComputerPage(nbPage, 0L);
+		if (paramPage != null) {
+			System.out.println("paramsearch  =" + paramSearch);
+			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L);
 
-				CHOICE: switch(paramPage) {
-				case "n":
-					if (page.getNextPage() != null){
-						page = page.getNextPage();
-					}
-					break;
-				case "p":
+			CHOICE: switch(paramPage) {
+			case "n":
+				if (page.getNextPage() != null){
+					page = page.getNextPage();
+				}
+				break;
+			case "p":
 
-					if (page.getPreviousPage() != null){
-						page = page.getPreviousPage();
-					}
-					break;
+				if (page.getPreviousPage() != null){
+					page = page.getPreviousPage();
+				}
+				break;
 
-				default :
-					try {
-						int np = Integer.parseInt(paramPage);
-						while (page.hasNext() && page.getNumberOfPage() != np ) {
-							if(page.getNumberOfPage() < np) {
-								if (page.getNextPage() == null) {
-									break CHOICE;
-								}
-								page = page.getNextPage();
+			default :
+				try {
+					int np = Integer.parseInt(paramPage);
+					while (page.hasNext() && page.getNumberOfPage() != np ) {
+						if(page.getNumberOfPage() < np) {
+							if (page.getNextPage() == null) {
+								break CHOICE;
 							}
-							else if(page.getNumberOfPage() > np) {
-								if (page.getPreviousPage() == null) {
-									break CHOICE;
-								}
-								page = page.getPreviousPage();
-							}
+							page = page.getNextPage();
 						}
-					} catch (NumberFormatException e) {
-						logger.error("Page is not a number. value of page = "+ paramPage);
+						else if(page.getNumberOfPage() > np) {
+							if (page.getPreviousPage() == null) {
+								break CHOICE;
+							}
+							page = page.getPreviousPage();
+						}
 					}
-
+				} catch (NumberFormatException e) {
+					logger.error("Page is not a number. value of page = "+ paramPage);
 				}
 
 			}
-			else {
-				page = new ComputerPage(nbPage, 0L);
-			}
+
+		}
+		else {
+			System.out.println("!!paramsearch  =" + paramSearch);
+			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L);
+		}
 
 		request.setAttribute( "computers", page.getPage() );
 		request.setAttribute( "nbComputers", computers.size() );
@@ -102,7 +102,7 @@ public class Dashboard extends HttpServlet {
 	}
 
 	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-	this.doGet(request, response);
+		this.doGet(request, response);
 	}
 
 

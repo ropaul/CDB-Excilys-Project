@@ -29,8 +29,6 @@ public class Delete extends HttpServlet{
 		
 		Logger logger = LoggerFactory.getLogger(Dashboard.class);
 		String paramSelected = request.getParameter( "selection" );
-		System.out.println("voila les resultatas");
-		System.out.println(paramSelected);
 		logger.info(paramSelected);
 		RequestDispatcher rd = request.getRequestDispatcher("dashboard");
 		rd.forward(request,response);

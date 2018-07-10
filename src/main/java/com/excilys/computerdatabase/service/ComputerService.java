@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
+import com.excilys.computerdatabase.persistence.CompanyDao;
 import com.excilys.computerdatabase.persistence.ComputerDao;
 
 public class ComputerService {
@@ -67,5 +69,12 @@ public class ComputerService {
 	public Boolean delete(long id) {
 		ComputerDao computerSql = ComputerDao.getInstance();
 		return computerSql.delete(id);
+	}
+	
+	
+	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin) {
+		ComputerDao computerSql = ComputerDao.getInstance();
+		return computerSql.search(nameComputer, nameCompany, number,idBegin);
+		
 	}
 }

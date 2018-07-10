@@ -28,7 +28,7 @@ public class InterfaceConsole {
 	 */
 	public static void showListComputer() throws SQLException {
 
-		ComputerPage pageGenerator =  new ComputerPage(Constant.NB_PAGE, 0L);
+		ComputerPage pageGenerator =  new ComputerPage("","",Constant.NB_PAGE, 0L);
 		ArrayList<Computer> computers;
 		boolean next =  true;
 		String answer= "";
