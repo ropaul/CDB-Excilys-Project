@@ -51,19 +51,19 @@ public class ComputerService {
 	}
 	
 	public boolean add(Computer c) {
-		return computerSql.add(c);
+		return computerSql.add(c, true);
 	}
 	
 	public boolean update(Computer c) {
-		return computerSql.update(c);
+		return computerSql.update(c, true);
 	}
 	
 	public boolean delete(Computer c) {
-		return computerSql.delete(c);
+		return computerSql.delete(c, true);
 	}
 	
 	public Boolean delete(long id) {
-		return computerSql.delete(id);
+		return computerSql.delete(id, true);
 	}
 	
 	

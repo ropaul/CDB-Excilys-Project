@@ -113,7 +113,6 @@ public class ComputerDao {
 	}
 		
 	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin){
-		System.out.println(nameCompany + "     " +  nameComputer);
 		CompanyDao computerDAO = CompanyDao.getInstance();
 		String query = "SELECT * FROM computer";
 		if ((nameCompany != null && nameCompany != "") ||
@@ -141,7 +140,7 @@ public class ComputerDao {
 		return getAll(query);
 	}
 	
-	public Boolean add(Computer c){
+	public Boolean add(Computer c, boolean commit){
 		long id = c.getId();
 		String name = c.getName();
 		String introduced;
@@ -168,12 +167,12 @@ public class ComputerDao {
 		else { query = "INSERT INTO computer  (name, introduced, discontinued, company_id) VALUES ( '" 
 				+ name + "'," + introduced  + "," + discontinued + "," + companyId + ")";
 		}
-		return HikariCP.getInstance().commit(query);
+		return HikariCP.getInstance().commit(query, commit);
 		
 	}
 
 	
-	public Boolean update( Computer newComputer)  {
+	public Boolean update( Computer newComputer, boolean commit)  {
 		long oldId = newComputer.getId();
 		String name = "'" +newComputer.getName() +"'" ;
 		String introduced ;
@@ -197,19 +196,19 @@ public class ComputerDao {
 				Constant.DISCONTINUED +" = "  + discontinued + ", " +
 				Constant.COMPAGNYID +" = "  + companyId +" " +
 				"WHERE " +  Constant.ID +" in ("  + oldId +");";
-		return HikariCP.getInstance().commit(query);
+		return HikariCP.getInstance().commit(query,  commit);
 
 	
 	}
 
 
-	public Boolean delete(Computer c) {
-		return delete(c.getId());
+	public Boolean delete(Computer c, boolean commit) {
+		return delete(c.getId(),  commit);
 	}
 
-	public Boolean delete(long id) {
+	public Boolean delete(long id, boolean commit) {
 		String query = "DELETE FROM computer  WHERE id = " + id ;
-		return HikariCP.getInstance().commit(query);
+		return HikariCP.getInstance().commit(query,  commit);
 	}
 
 

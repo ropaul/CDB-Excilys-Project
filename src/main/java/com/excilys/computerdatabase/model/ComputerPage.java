@@ -84,7 +84,6 @@ public class ComputerPage {
 	
 	private ArrayList<Computer> nextPage() {
 			ComputerService computerService =  ComputerService.getInstance();
-			
 			ArrayList<Computer> resultPage = computerService.search(searchComputer, searchCompany, numberPerPage, currentId);
 		for (Computer c : resultPage) {
 			if (currentId < c.getId())

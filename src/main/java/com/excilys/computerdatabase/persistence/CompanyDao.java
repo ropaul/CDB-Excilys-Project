@@ -126,19 +126,21 @@ public class CompanyDao {
 	
 	
 	
-	public boolean delete(Company company) {
+	public boolean delete(Company company, Boolean commit) {
+		boolean result  = true;
 		ComputerDao computerDao = ComputerDao.getInstance();
+		
 		ArrayList<Computer> allComputerOfTheCompany = computerDao.search("",company.getName(),Integer.MAX_VALUE, 0L);
 		for (Computer computer : allComputerOfTheCompany) {
-			System.out.println("on supprime ça : " + computer);
-			computerDao.delete(computer);
+			result  = result && computerDao.delete(computer, false);
 		}
 		String query =  "DELETE FROM company  WHERE id = " + company.getId();
-		return HikariCP.getInstance().commit(query);
+		result  = result && HikariCP.getInstance().commit(query, commit);
+		return result;
  	}
 	
-	public boolean delete(Long id) {
-		return delete(this.get(id).orElse(null));
+	public boolean delete(Long id, boolean commit) {
+		return delete(this.get(id).orElse(null), commit);
 		
 	}
 
@@ -146,9 +148,7 @@ public class CompanyDao {
 public static void main(String[] args) {
 		CompanyDao cd = CompanyDao.getInstance();
 		Company company = cd.get(1L).orElse(null);
-		
-		cd.delete(company);
-		System.out.println(company);
+		System.out.println(cd.delete(company, true));
 	}
 	
 }

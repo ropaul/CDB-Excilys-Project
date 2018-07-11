@@ -15,8 +15,8 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class HikariCP {
 
-	
-	
+
+
 	static Logger logger;
 	private static HikariCP INSTANCE = null;
 	private static HikariConfig config = new HikariConfig();
@@ -25,9 +25,9 @@ public class HikariCP {
 
 
 	private HikariCP(){
-		
+
 		logger = LoggerFactory.getLogger(HikariCP.class);
-		
+
 		config.setJdbcUrl( url );
 		config.setUsername( "root" );
 		config.setPassword( "root" );
@@ -36,9 +36,9 @@ public class HikariCP {
 		config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
 		config.setAutoCommit(false);
 		ds = new HikariDataSource( config );
-	
+
 	}
-	
+
 	public static HikariCP getInstance() 
 	{   
 		if (INSTANCE == null){   
@@ -51,23 +51,27 @@ public class HikariCP {
 		return INSTANCE;
 	}
 
-	
+
 
 
 	public Connection getConnection() throws SQLException {
 		return ds.getConnection();
 	}
 
-	
-	public boolean commit(String query) {
+
+	public boolean commit(String query, boolean commit) {
 		Statement state;
 		Connection conn = null;
 		try {
 			conn = HikariCP.getInstance().getConnection();;
 			state = conn.createStatement();
 			state.executeUpdate(query);
+			if (commit) {
+				conn.commit();
+			}
 			state.close();
 			conn.close();
+			
 			return true;
 		} catch (SQLException e) {
 			try {
@@ -75,13 +79,13 @@ public class HikariCP {
 				conn.close();
 				logger.error("Can't commit but can do rollback: " + e.getMessage());
 				return false;
-				
+
 			} catch (SQLException e1) {
-				logger.error("Can't do the rollback: " + e1.getMessage());
+				logger.error("Can't do the rollback: " +"\nfirst error:" + e.getMessage()+"\nsecond error:"+ e1.getMessage());
 				return false;
 			}
 		}
 	}
-	
-	
+
+
 }

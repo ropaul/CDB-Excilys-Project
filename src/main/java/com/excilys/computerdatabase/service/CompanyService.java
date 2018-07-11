@@ -46,7 +46,7 @@ public class CompanyService {
 	}
 	
 	public boolean delete(Company company) {
-		return companySql.delete(company);
+		return companySql.delete(company, true);
 	}
 	
 	
