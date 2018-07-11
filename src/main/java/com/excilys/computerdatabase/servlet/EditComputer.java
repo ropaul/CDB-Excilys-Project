@@ -36,6 +36,8 @@ public class EditComputer extends HttpServlet {
 	public static final String ID_COMPUTER  = "computerId";
 	public static final String ATT_ERREURS  = "erreurs";
 	public static final String ATT_RESULTAT = "resultat";
+	CompanyService companyService = CompanyService.getInstance();
+	ComputerService computerService = ComputerService.getInstance();
 
 	public void doGet( HttpServletRequest request, HttpServletResponse response )
 			throws ServletException, IOException{
@@ -44,9 +46,6 @@ public class EditComputer extends HttpServlet {
 		String idComputer = request.getParameter( ID_COMPUTER );
 		Computer computer = new Computer();
 		ArrayList<Company> companies = new ArrayList<>();
-
-		CompanyService companyService = CompanyService.getInstance();
-		ComputerService computerService = ComputerService.getInstance();
 
 		companies = companyService.getAll();
 		computer  =  computerService.get(Long.parseLong(idComputer));
@@ -71,10 +70,6 @@ public class EditComputer extends HttpServlet {
 		String discontinued = request.getParameter( DISCONTINUED );
 		String idCompany = request.getParameter( ID_COMPANY );
 		String computerId = request.getParameter( ID_COMPUTER );
-
-
-		CompanyService companyService = CompanyService.getInstance();
-		ComputerService computerService = ComputerService.getInstance();
 
 		Validation validateur = Validation.getInstance();
 		HashMap<String, String> erreurs = validateur.AddAndEditValidation(name, introduced, discontinued, idCompany);

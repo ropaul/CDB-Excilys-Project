@@ -12,12 +12,12 @@ public class CompanyService {
 
 	
 	private static CompanyService INSTANCE;
-	private Logger logger;
+	private Logger logger= LoggerFactory.getLogger(CompanyService.class);
 	CompanyDao companySql;
 	
 	private CompanyService() 
 	{
-		logger = LoggerFactory.getLogger(CompanyService.class);
+		
 		companySql = CompanyDao.getInstance();
 	}
 

@@ -27,6 +27,7 @@ public class Dashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ComputerPage page;
 	private int nbPage = Constant.NB_PAGE;
+	ComputerService computerService =  ComputerService.getInstance();
 
 
 	public void doGet( HttpServletRequest request, HttpServletResponse response )
@@ -43,13 +44,12 @@ public class Dashboard extends HttpServlet {
 		}
 
 
-		ComputerService computerService =  ComputerService.getInstance();
+		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 
 		computers = computerService.getAll();
 
 		if (paramPage != null) {
-			System.out.println("paramsearch  =" + paramSearch);
 			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L);
 
 			CHOICE: switch(paramPage) {

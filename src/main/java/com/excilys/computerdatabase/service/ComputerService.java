@@ -14,12 +14,12 @@ public class ComputerService {
 	
 	
 	private static ComputerService INSTANCE;
-	private Logger logger;
+	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	ComputerDao computerSql;
 	
 	private ComputerService() 
 	{
-		logger = LoggerFactory.getLogger(ComputerService.class);
+		
 		computerSql = ComputerDao.getInstance();
 	}
 

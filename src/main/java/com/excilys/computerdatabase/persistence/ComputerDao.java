@@ -2,6 +2,7 @@ package com.excilys.computerdatabase.persistence;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -144,30 +145,35 @@ public class ComputerDao {
 		long id = c.getId();
 		String name = c.getName();
 		String introduced;
-		try {
-			introduced = "'" +c.getIntroduced().toString()+"'";
-		} catch (Exception e) {
-			introduced = "null";
-		}
+		
+			introduced = c.getIntroduced()!= null ? "'" +c.getIntroduced().toString()+"'" : "null" ;
+		
+		
 		String discontinued;
-		try {
-			discontinued = "'" +c.getDiscontinued().toString()+"'";
-		} catch (Exception e) {
-			discontinued = "null";
-		}
+		
+			discontinued = c.getDiscontinued() != null ? "'" +c.getDiscontinued().toString()+"'" : "null" ;
+		
 
 		Long companyId = null;
-		if (c.getCompany() != null){
+		if (c.getCompany() != null && c.getCompany().getId() != 0){
 			companyId =  c.getCompany().getId();
 		}
-		String query;
-		if (id > 0) {  query = "INSERT INTO computer  VALUES (" +
-				id + ", '" + name + "'," + introduced  + "," + discontinued + "," + companyId + ")";
+		PreparedStatement query = null;
+		Connection conn = HikariCP.getInstance().getConnection();
+		try {
+		if (id > 0) {  
+			query = conn.prepareStatement("INSERT INTO computer  VALUES (" +
+					id + ", '" + name + "'," + introduced  + "," + discontinued + "," + companyId + ")");
 		}
-		else { query = "INSERT INTO computer  (name, introduced, discontinued, company_id) VALUES ( '" 
-				+ name + "'," + introduced  + "," + discontinued + "," + companyId + ")";
+		else { query = conn.prepareStatement("INSERT INTO computer  (name, introduced, discontinued, company_id) VALUES ( '" 
+					+ name + "'," + introduced  + "," + discontinued + "," + companyId + ")");
+			}
+		} catch (SQLException e) {
+			logger.error("Error during creation of a query.");
 		}
-		return HikariCP.getInstance().commit(query, commit);
+		
+		
+		return HikariCP.getInstance().commit(query,conn, commit);
 		
 	}
 
@@ -176,27 +182,31 @@ public class ComputerDao {
 		long oldId = newComputer.getId();
 		String name = "'" +newComputer.getName() +"'" ;
 		String introduced ;
-		try {
-			introduced = "'" + newComputer.getIntroduced().toString()+"'";
-		} catch (Exception e) {
-			introduced = null;
-		}
+		
+introduced = newComputer.getIntroduced()!= null ? "'" +newComputer.getIntroduced().toString()+"'" : "null" ;
+		
+		
 		String discontinued;
-		try {
-			discontinued = "'" +newComputer.getDiscontinued().toString()+"'";
-		} catch (Exception e) {
-			discontinued = null;
-		}
+		
+			discontinued = newComputer.getDiscontinued() != null ? "'" +newComputer.getDiscontinued().toString()+"'" : "null" ;
+			
+			
 		Long companyId = null;
 		if (newComputer.getCompany() != null){
 			companyId =  newComputer.getCompany().getId();
 		}
-		String query = "UPDATE  computer  SET " + Constant.NAME +" = "  + name + ", "+ 
-				Constant.INTRODUCED +" = "  + introduced  + ", " +
-				Constant.DISCONTINUED +" = "  + discontinued + ", " +
-				Constant.COMPAGNYID +" = "  + companyId +" " +
-				"WHERE " +  Constant.ID +" in ("  + oldId +");";
-		return HikariCP.getInstance().commit(query,  commit);
+		Connection conn = HikariCP.getInstance().getConnection();
+		PreparedStatement query = null;
+		try {
+			query = conn.prepareStatement("UPDATE  computer  SET " + Constant.NAME +" = "  + name + ", "+ 
+					Constant.INTRODUCED +" = "  + introduced  + ", " +
+					Constant.DISCONTINUED +" = "  + discontinued + ", " +
+					Constant.COMPAGNYID +" = "  + companyId +" " +
+					"WHERE " +  Constant.ID +" in ("  + oldId +");");
+		} catch (SQLException e) {
+			logger.error("Error during creation of a query.");
+		}
+		return HikariCP.getInstance().commit(query,conn,  commit);
 
 	
 	}
@@ -207,8 +217,14 @@ public class ComputerDao {
 	}
 
 	public Boolean delete(long id, boolean commit) {
-		String query = "DELETE FROM computer  WHERE id = " + id ;
-		return HikariCP.getInstance().commit(query,  commit);
+		Connection conn = HikariCP.getInstance().getConnection();
+		PreparedStatement query = null;
+		try {
+			query = conn.prepareStatement( "DELETE FROM computer  WHERE id = " + id );
+		} catch (SQLException e) {
+			logger.error("Error during creation of a query.");
+		}
+		return HikariCP.getInstance().commit(query, conn, commit);
 	}
 
 

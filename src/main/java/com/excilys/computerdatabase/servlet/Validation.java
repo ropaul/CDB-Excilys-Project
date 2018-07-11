@@ -20,6 +20,7 @@ public class Validation {
 	public static final String ID_COMPANY  = "companyId";
 	public static final String ATT_ERREURS  = "erreurs";
 	public static final String ATT_RESULTAT = "resultat";
+	CompanyService manager = CompanyService.getInstance();
 
 	private Validation() 
 	{
@@ -44,28 +45,28 @@ public class Validation {
 		HashMap<String, String> erreurs = new HashMap<String, String>();
 		try {
 			validationNom(name);
-		} catch ( Exception e ) {
+		} catch ( ValidationException e ) {
 			erreurs.put( NAME, e.getMessage() );
 			logger.error(e.getMessage());
 		}
 
 		try {
 			validationDate(introduced );
-		} catch ( Exception e ) {
+		} catch ( ValidationException e ) {
 			erreurs.put(INTRODUCED, e.getMessage() );
 			logger.error(e.getMessage());
 		}
 
 		try {
 			validationDate(discontinued);
-		} catch ( Exception e ) {
+		} catch ( ValidationException e ) {
 			erreurs.put( DISCONTINUED, e.getMessage() );
 			logger.error(e.getMessage());
 		}
 
 		try {
 			validationCompany(idCompany);
-		} catch ( Exception e ) {
+		} catch ( ValidationException e ) {
 			erreurs.put( ID_COMPANY, e.getMessage() );
 			logger.error(e.getMessage());
 		}
@@ -73,15 +74,14 @@ public class Validation {
 		return erreurs;
 	}
 
-	private void validationNom( String nom ) throws Exception {
-
+	private void validationNom( String nom ) throws ValidationException {
 		if ( nom != null && nom.length() <= 0 ) {
 			throw new ValidationException( "Name must be defined" );
 		}
 
 	}
 
-	private void validationDate(  String stringDate ) throws Exception {
+	private void validationDate(  String stringDate ) throws ValidationException {
 		String errorMessage = "Date is not correct. Date = " + stringDate;
 		try {
 			if (stringDate == null || stringDate.replace(" ", "") == "") return;
@@ -97,10 +97,10 @@ public class Validation {
 
 
 
-	private void validationCompany(  String idCompany ) throws Exception {
+	private void validationCompany(  String idCompany ) throws ValidationException {
 		if (idCompany == null || idCompany == "" || Long.parseLong(idCompany) == 0L) return;
 		try {
-			CompanyService manager = CompanyService.getInstance();
+			
 			Company company = manager.get(Long.parseLong(idCompany));
 			if ( company == null  ) {
 				throw new ValidationException( "Company doesn't exists" );

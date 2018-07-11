@@ -1,6 +1,7 @@
 package com.excilys.computerdatabase.persistence;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,11 +16,15 @@ import com.excilys.computerdatabase.Constant;
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 
+
 public class CompanyDao {
 
 	String url = "jdbc:mysql://localhost:3306/computer-database-db";
 	static Logger logger;
 	private static CompanyDao INSTANCE = null;
+	
+	
+	private String SELECT_ALL = "SELECT * FROM company";
 
 
 	private CompanyDao(){
@@ -46,21 +51,19 @@ public class CompanyDao {
 		return INSTANCE;
 	}
 	
-	private ArrayList<Company> getAll(String query){
+	private ArrayList<Company> getAll(PreparedStatement query, Connection conn){
 		ArrayList<Company>  companyList = new ArrayList<Company>();
-		Connection conn = null;
+	
 		try {
-			conn = HikariCP.getInstance().getConnection();  //DriverManager.getConnection(url, "root", "root");
-			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
 			logger.info("Connection to get all the companies.");
-			ResultSet result =  state.executeQuery(query);
+			ResultSet result =  query.executeQuery();
 			conn.commit();
 			result.first();
 			do{
 
 				companyList.add(new Company(result.getInt(Constant.ID), result.getString(Constant.NAME)));
 			}while (result.next());
-			state.close();
 			conn.close();
 		} catch (SQLException e) {
 			try {
@@ -77,37 +80,46 @@ public class CompanyDao {
 	}
 	
 	
-	public ArrayList<Company> getAll(){
-		String query = "SELECT * FROM company";
+	public ArrayList<Company> getAll() {
+		Connection conn = HikariCP.getInstance().getConnection(); 
+		PreparedStatement query = null;
+		try {
+			query = conn.prepareStatement( "SELECT * FROM company");
+		} catch (SQLException e) {
+			logger.error("Error during creation of a query.");
+		}
 		
-		return getAll(query);
+		return getAll(query, conn);
 	}
 	
 	
-	public ArrayList<Company> search(String name) {
-		String query = "SELECT * FROM company WHERE name LIKE '%" + name+ "%'" ;
+	public ArrayList<Company> search(String name)  {
+		Connection conn = HikariCP.getInstance().getConnection(); 
+		PreparedStatement query = null;
+		try {
+			query = conn.prepareStatement( "SELECT * FROM company WHERE name LIKE '%" + name+ "%'" );
+		} catch (SQLException e) {
+			logger.error("Error during creation of a query.");
+		}
 		
-		return getAll(query);
+		return getAll(query,conn);
 	}
 
 	public Optional<Company> get(long companyID){
 		Connection conn =  null;
 		try {
 			conn = HikariCP.getInstance().getConnection();;
-			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			logger.info("Connection to get the company with id =" + companyID);
-			String query = "SELECT * FROM company Where id =" + companyID;
-			ResultSet result =  state.executeQuery(query);
+			PreparedStatement query =conn.prepareStatement("SELECT * FROM company Where id =" + companyID);
+			ResultSet result =  query.executeQuery();
 			conn.commit();
 			Company companyResult;
 			if (result.first()) {
 				result.first();
 				companyResult = new Company(result.getInt(Constant.ID), result.getString(Constant.NAME));
-				state.close();
 				conn.close();
 				return Optional.ofNullable(companyResult);
 			}
-			state.close();
 			conn.close();
 			
 			
@@ -126,7 +138,7 @@ public class CompanyDao {
 	
 	
 	
-	public boolean delete(Company company, Boolean commit) {
+	public boolean delete(Company company, Boolean commit)  {
 		boolean result  = true;
 		ComputerDao computerDao = ComputerDao.getInstance();
 		
@@ -134,8 +146,19 @@ public class CompanyDao {
 		for (Computer computer : allComputerOfTheCompany) {
 			result  = result && computerDao.delete(computer, false);
 		}
-		String query =  "DELETE FROM company  WHERE id = " + company.getId();
-		result  = result && HikariCP.getInstance().commit(query, commit);
+		Connection conn = HikariCP.getInstance().getConnection(); 
+		PreparedStatement query = null;
+		try {
+			query = conn.prepareStatement("DELETE FROM company  WHERE id = " + company.getId());
+		} catch (SQLException e) {
+			logger.error("Error during creation of a query.");
+		}
+		result  = result && HikariCP.getInstance().commit(query,conn, commit);
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			logger.error("Error closing of connection");
+		}
 		return result;
  	}
 	

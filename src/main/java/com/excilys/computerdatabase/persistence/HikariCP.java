@@ -1,15 +1,14 @@
 package com.excilys.computerdatabase.persistence;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.computerdatabase.Constant;
-import com.excilys.computerdatabase.model.Company;
+
+import java.sql.PreparedStatement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -54,18 +53,22 @@ public class HikariCP {
 
 
 
-	public Connection getConnection() throws SQLException {
-		return ds.getConnection();
+	public Connection getConnection()  {
+		try {
+			return ds.getConnection();
+		} catch (SQLException e) {
+			logger.error("Doesn't be able to get a connection");
+		}
+		return null;
 	}
 
 
-	public boolean commit(String query, boolean commit) {
+	public boolean commit(PreparedStatement query,Connection conn, boolean commit) {
 		Statement state;
-		Connection conn = null;
+		
 		try {
-			conn = HikariCP.getInstance().getConnection();;
 			state = conn.createStatement();
-			state.executeUpdate(query);
+			query.execute();
 			if (commit) {
 				conn.commit();
 			}
