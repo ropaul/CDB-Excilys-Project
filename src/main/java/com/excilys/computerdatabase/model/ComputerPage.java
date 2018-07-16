@@ -1,12 +1,13 @@
 package com.excilys.computerdatabase.model;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.annotation.Resource;
 
 import com.excilys.computerdatabase.service.ComputerService;
 
 
-
+@Resource
 public class ComputerPage {
 
 	int numberPerPage;

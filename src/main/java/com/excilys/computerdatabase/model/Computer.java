@@ -2,15 +2,12 @@ package com.excilys.computerdatabase.model;
 
 import java.sql.Date;
 
+import javax.annotation.Resource;
 
 
 
 
-/**
- * @author Yann
- * @
- * 
- */
+
 public class Computer {
 	private long id;
 	private String name;

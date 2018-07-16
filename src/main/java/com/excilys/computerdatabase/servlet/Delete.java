@@ -3,6 +3,7 @@ package com.excilys.computerdatabase.servlet;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.service.CompanyService;
@@ -24,8 +27,15 @@ public class Delete extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	CompanyService cs = CompanyService.getInstance();
+	@Autowired
+	CompanyService computerService;
 
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+}
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
@@ -54,8 +64,8 @@ public class Delete extends HttpServlet{
 
 	public void deleteCompany(Long idCompany, Logger logger) {
 		
-		Company company = cs.get(idCompany);
-		cs.delete(company);
+		Company company = computerService.get(idCompany);
+		computerService.delete(company);
 		logger.info("Company delete:" + company);
 	}
 	

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.persistence.CompanyDao;
 
-public class CompanyService {
+@Repository("companyService")
+public class CompanyService extends AbstractService{
 
 	
 	private static CompanyService INSTANCE;

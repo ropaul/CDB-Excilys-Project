@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
@@ -33,9 +37,19 @@ public class AddComputer extends HttpServlet {
 	public static final String ID_COMPANY  = "companyId";
 	public static final String ATT_ERREURS  = "erreurs";
 	public static final String ATT_RESULTAT = "resultat";
-	CompanyService companyService = CompanyService.getInstance();
-	ComputerService computerService = ComputerService.getInstance();
+	@Autowired
+	CompanyService companyService;
+	@Autowired
+	ComputerService computerService;
 
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+}
+	
+	
 	public void doGet( HttpServletRequest request, HttpServletResponse response )
 			throws ServletException, IOException{
 		ArrayList<Company> companies = new ArrayList<>();

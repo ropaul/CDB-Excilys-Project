@@ -3,14 +3,20 @@ package com.excilys.computerdatabase.servlet;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.catalina.core.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.Constant;
 import com.excilys.computerdatabase.model.Computer;
@@ -18,27 +24,37 @@ import com.excilys.computerdatabase.model.ComputerPage;
 import com.excilys.computerdatabase.service.ComputerService;
 
 
-
-
+//
+//@RequestMapping("/dashboard")
 @WebServlet("/dashboard")
 public class Dashboard extends HttpServlet {
 
-
+	
 	private static final long serialVersionUID = 1L;
 	private ComputerPage page;
 	private int nbPage = Constant.NB_PAGE;
-	ComputerService computerService =  ComputerService.getInstance();
+	Logger logger = LoggerFactory.getLogger(Dashboard.class);
+	@Autowired
+	ComputerService computerService ;//= ComputerService.getInstance();
 
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+}
+	
 
 	public void doGet( HttpServletRequest request, HttpServletResponse response )
 			throws ServletException, IOException{
 
+//		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(Dashboard.class);
+//		ComputerService computerService = ctx.getBean(ComputerService.class) ;//ComputerService.getInstance();
+		
 		String paramPage = request.getParameter("page");
 		String paramNbPerPage = request.getParameter("perpage");
 		String paramSearch = request.getParameter("search");
 
-		Logger logger = LoggerFactory.getLogger(Dashboard.class);
-
+		
 		if (paramNbPerPage != null) {
 			nbPage =  Integer.parseInt(paramNbPerPage);
 		}

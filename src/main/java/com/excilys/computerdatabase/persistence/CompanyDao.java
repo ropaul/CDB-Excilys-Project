@@ -4,27 +4,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.Optional;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.Constant;
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 
-
+@Repository("companyDao")
 public class CompanyDao {
 
 	String url = "jdbc:mysql://localhost:3306/computer-database-db";
 	static Logger logger;
 	private static CompanyDao INSTANCE = null;
 	
+	@Autowired
+	HikariCP hikariCP;
 	
 	private String SELECT_ALL = "SELECT * FROM company";
+	private String ERROR_DURING_QUERY = "Error during creation of a query.";
+	private String ROLLBACK = "Can't do the rollback: ";
+	private String DELETE = "DELETE FROM company  WHERE id = %s";
+	private String SELECT_SEARCH =  "SELECT * FROM company WHERE name LIKE '% /s %'" ;
+	private String SELECT_ID = "SELECT * FROM company Where id = %s";
 
 
 	private CompanyDao(){
@@ -56,7 +63,6 @@ public class CompanyDao {
 	
 		try {
 			
-			logger.info("Connection to get all the companies.");
 			ResultSet result =  query.executeQuery();
 			conn.commit();
 			result.first();
@@ -70,7 +76,7 @@ public class CompanyDao {
 				conn.rollback();
 				conn.close();
 			} catch (SQLException e1) {
-				logger.error("Can't do the rollback: " + e.getMessage());
+				logger.error(ROLLBACK + e.getMessage());
 			}
 			logger.error(e.getMessage());
 			
@@ -84,9 +90,9 @@ public class CompanyDao {
 		Connection conn = HikariCP.getInstance().getConnection(); 
 		PreparedStatement query = null;
 		try {
-			query = conn.prepareStatement( "SELECT * FROM company");
+			query = conn.prepareStatement( SELECT_ALL);
 		} catch (SQLException e) {
-			logger.error("Error during creation of a query.");
+			logger.error(ERROR_DURING_QUERY);
 		}
 		
 		return getAll(query, conn);
@@ -97,9 +103,12 @@ public class CompanyDao {
 		Connection conn = HikariCP.getInstance().getConnection(); 
 		PreparedStatement query = null;
 		try {
-			query = conn.prepareStatement( "SELECT * FROM company WHERE name LIKE '%" + name+ "%'" );
+			StringBuilder sbuf = new StringBuilder();
+			Formatter fmt = new Formatter(sbuf);
+			fmt.format(SELECT_SEARCH, name);
+			query = conn.prepareStatement(sbuf.toString() );
 		} catch (SQLException e) {
-			logger.error("Error during creation of a query.");
+			logger.error(ERROR_DURING_QUERY);
 		}
 		
 		return getAll(query,conn);
@@ -109,8 +118,7 @@ public class CompanyDao {
 		Connection conn =  null;
 		try {
 			conn = HikariCP.getInstance().getConnection();;
-			logger.info("Connection to get the company with id =" + companyID);
-			PreparedStatement query =conn.prepareStatement("SELECT * FROM company Where id =" + companyID);
+			PreparedStatement query =conn.prepareStatement( SELECT_ID + companyID);
 			ResultSet result =  query.executeQuery();
 			conn.commit();
 			Company companyResult;
@@ -128,7 +136,7 @@ public class CompanyDao {
 				conn.rollback();
 				conn.close();
 			} catch (SQLException e1) {
-				logger.error("Can't do the rollback: " + e.getMessage());
+				logger.error(ROLLBACK + e.getMessage());
 			}
 			logger.error(e.getMessage());
 			
@@ -149,9 +157,9 @@ public class CompanyDao {
 		Connection conn = HikariCP.getInstance().getConnection(); 
 		PreparedStatement query = null;
 		try {
-			query = conn.prepareStatement("DELETE FROM company  WHERE id = " + company.getId());
+			query = conn.prepareStatement(DELETE + company.getId());
 		} catch (SQLException e) {
-			logger.error("Error during creation of a query.");
+			logger.error(ERROR_DURING_QUERY);
 		}
 		result  = result && HikariCP.getInstance().commit(query,conn, commit);
 		try {
@@ -169,11 +177,15 @@ public class CompanyDao {
 
 	
 public static void main(String[] args) {
-		CompanyDao cd = CompanyDao.getInstance();
-		Company company = cd.get(1L).orElse(null);
-		System.out.println(cd.delete(company, true));
+//		CompanyDao cd = CompanyDao.getInstance();
+//		Company company = cd.get(1L).orElse(null);
+	String test = "he %s";
+		System.out.printf(test,"ca marche");
 	}
 	
+
+
+
 }
 
 

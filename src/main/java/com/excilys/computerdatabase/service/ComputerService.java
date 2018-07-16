@@ -4,13 +4,19 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.persistence.CompanyDao;
 import com.excilys.computerdatabase.persistence.ComputerDao;
 
-public class ComputerService {
+
+@Configuration
+
+@Repository("computerService")
+public class ComputerService extends AbstractService{
 	
 	
 	private static ComputerService INSTANCE;
@@ -23,6 +29,7 @@ public class ComputerService {
 		computerSql = ComputerDao.getInstance();
 	}
 
+	
 	public static ComputerService getInstance() 
 	{   
 		if (INSTANCE == null){   
@@ -33,7 +40,7 @@ public class ComputerService {
 			}
 		}
 		return INSTANCE;
-	}
+	};
 	
 	public ArrayList<Computer> getAll(){
 		return computerSql.getAll();
