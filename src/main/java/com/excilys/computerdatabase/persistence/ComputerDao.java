@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -24,13 +23,15 @@ public class ComputerDao {
 	String url = "jdbc:mysql://localhost:3306/computer-database-db";
 	Logger logger;
 	private static ComputerDao INSTANCE = null;
+	CompanyDao companyDAO = CompanyDao.getInstance();
+	HikariCP hikari =  HikariCP.getInstance();
 	
 	private String ERROR_DURING_QUERY = "Error during creation of a query.";
 	private String ROLLBACK           = "Can't do the rollback: ";
 	private String SELECT_ALL         = "SELECT * FROM computer";
 	private String SELECT_ID          = "SELECT * FROM computer WHERE " + Constant.ID + " > %s LIMIT  %s";
 	private String SELECT_ONE         = "SELECT * FROM computer Where id = %s";
-	private String SELECT_SEARCH      = "SELECT * FROM computer WHERE " + Constant.NAME + " LIKE '%%s%' AND"  + Constant.ID + " > %s LIMIT %s";
+	private String SELECT_SEARCH      = "SELECT * FROM computer WHERE " + Constant.NAME + " LIKE '%?%' AND"  + Constant.ID + " > ? LIMIT ?";
 	private String ADD                = "INSERT INTO computer  VALUES (%s, '%s',%s ,%s, %s )";
 	private String ADD_WHITHOUT_ID    = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES ( '%s',%s ,%s, %s )";
 	private String DELETE             = "DELETE FROM computer  WHERE id = %s";
@@ -65,22 +66,21 @@ public class ComputerDao {
 		return INSTANCE;
 	}
 
-	private ArrayList<Computer> getAll(String query)   {
+	private ArrayList<Computer> getAll(PreparedStatement query, Connection conn)   {
 		ArrayList<Computer>  computersList = new ArrayList<Computer>();
 		ArrayList<Company> companies;
-		CompanyDao companySql = CompanyDao.getInstance();
-		Connection conn = null;
+		
+
 		try {
-			companies = companySql.getAll();
+			companies = companyDAO.getAll();
 			HashMap<Long, Company> companyPerID = new HashMap<Long, Company>();
 			for (Company company: companies) {
 				companyPerID.put(company.getId(), company);
 			}
-			 conn = HikariCP.getInstance().getConnection();
 			 
-			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
-			ResultSet result =  state.executeQuery(query);
+			 
+			
+			ResultSet result =  query.executeQuery();
 			conn.commit();
 			result.first();
 
@@ -94,7 +94,6 @@ public class ComputerDao {
 
 				computersList.add(computer);
 			}while (result.next());
-			state.close();
 			conn.close();
 		} catch (SQLException e) {
 			try {
@@ -113,43 +112,62 @@ public class ComputerDao {
 	}
 
 	public ArrayList<Computer> getAll(){
-		String query = SELECT_ALL;
-		return getAll(query);
+		Connection conn = hikari.getConnection();
+		PreparedStatement query = null;
+		try {
+			query = conn.prepareStatement(SELECT_ALL);
+		} catch (SQLException e) {
+			logger.error(ERROR_DURING_QUERY);
+		}
+		return getAll(query, conn);
 	}
 
 
-	public ArrayList<Computer> getAll(int number, Long idBegin){
-		StringBuilder sbuf = new StringBuilder();
-		Formatter fmt = new Formatter(sbuf);
-		fmt.format(SELECT_ID, Constant.ID,idBegin,number );
-		String query = sbuf.toString() ;
-		return getAll(query);
+	public ArrayList<Computer> getAll(int number, Long idBegin) {
+		Connection conn = hikari.getConnection();
+		PreparedStatement query = null;
+		try {
+			query = conn.prepareStatement(SELECT_ID);
+			query.setString(1, Constant.ID);
+			query.setLong(2, idBegin);
+			query.setLong(3, number);
+		} catch (SQLException e) {
+			logger.error(ERROR_DURING_QUERY);
+		}
+		
+		return getAll(query, conn);
 	}
 
 
 	
-	public ArrayList<Computer> search(String name, int number, Long idBegin){
-		StringBuilder sbuf = new StringBuilder();
-		Formatter fmt = new Formatter(sbuf);
+	public ArrayList<Computer> search(String name, int number, Long idBegin) throws SQLException{
 		
-		fmt.format(SELECT_SEARCH,name, Constant.ID,idBegin,number );
-		String query = sbuf.toString() ;
-		return getAll(query);
+		Connection conn = hikari.getConnection();
+		PreparedStatement query = conn.prepareStatement(SELECT_SEARCH);
+		query.setString(1, name);
+		query.setString(2, Constant.ID);
+		query.setLong(3, idBegin);
+		query.setLong(4, number);
+		return getAll(query, conn);
 	}
 		
-	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin){
-		CompanyDao computerDAO = CompanyDao.getInstance();
-		String query = "SELECT * FROM computer";
+	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin) {
+		Connection conn = hikari.getConnection();
+		String query = SELECT_ALL;
 		if ((nameCompany != null && nameCompany != "") ||
 				(nameComputer != null && nameComputer != "")||
 				(number != 0 || idBegin != 0)) {
 			query+=" WHERE " + Constant.ID + " > " + idBegin ;
 		}
 		else {
-			return getAll(query);
+			try {
+				return getAll(conn.prepareStatement(query), conn);
+			} catch (SQLException e) {
+				logger.error(ERROR_DURING_QUERY);
+			}
 		}
 		if ((nameCompany != null && nameCompany != "")) {
-		ArrayList<Company> companies = computerDAO.search(nameCompany);
+		ArrayList<Company> companies = companyDAO.search(nameCompany);
 		String idCompany = "(";
 		for (int i = 0;  i< companies.size(); i++) {
 			idCompany += (int) companies.get(i).getId() + ", ";
@@ -162,7 +180,12 @@ public class ComputerDao {
 			query += " OR " +Constant.NAME + " LIKE '%" + nameComputer + "%'"; 
 		}
 		query += " LIMIT " + number;
-		return getAll(query);
+		try {
+			return getAll(conn.prepareStatement(query), conn);
+		} catch (SQLException e) {
+			logger.error(ERROR_DURING_QUERY);
+		}
+		return new ArrayList<Computer>();
 	}
 	
 	public Boolean add(Computer c, boolean commit){
@@ -183,22 +206,24 @@ public class ComputerDao {
 			companyId =  c.getCompany().getId();
 		}
 		PreparedStatement query = null;
-		Connection conn = HikariCP.getInstance().getConnection();
+		Connection conn = hikari.getConnection();
 		try {
 		if (id > 0) { 
-			StringBuilder sbuf = new StringBuilder();
-			Formatter fmt = new Formatter(sbuf);
 			
-			fmt.format(ADD, id, name, introduced, discontinued, companyId );
-			query = conn.prepareStatement(sbuf.toString() );
+			query = conn.prepareStatement(ADD );
+			query.setLong(1, id);
+			query.setString(2, name);
+			query.setString(3, introduced);
+			query.setString(4, discontinued);
+			query.setLong(5, companyId);
 			
 		}
 		else { 
-			StringBuilder sbuf = new StringBuilder();
-			Formatter fmt = new Formatter(sbuf);
-			fmt.format(ADD_WHITHOUT_ID,  name, introduced, discontinued, companyId );
-			
-			query = conn.prepareStatement(sbuf.toString() );
+			query = conn.prepareStatement(ADD_WHITHOUT_ID );
+			query.setString(1, name);
+			query.setString(2, introduced);
+			query.setString(3, discontinued);
+			query.setLong(4, companyId);
 			
 			}
 		} catch (SQLException e) {
@@ -206,7 +231,7 @@ public class ComputerDao {
 		}
 		
 		
-		return HikariCP.getInstance().commit(query,conn, commit);
+		return hikari.commit(query,conn, commit);
 		
 	}
 
@@ -228,19 +253,20 @@ introduced = newComputer.getIntroduced()!= null ? "'" +newComputer.getIntroduced
 		if (newComputer.getCompany() != null){
 			companyId =  newComputer.getCompany().getId();
 		}
-		Connection conn = HikariCP.getInstance().getConnection();
+		Connection conn = hikari.getConnection();
 		PreparedStatement query = null;
 		try {
-			StringBuilder sbuf = new StringBuilder();
-			Formatter fmt = new Formatter(sbuf);
-			fmt.format(UPDATE, name, introduced, discontinued, companyId, oldId );
-			
-			query = conn.prepareStatement(sbuf.toString() );
+			query = conn.prepareStatement(UPDATE );
+			query.setString(1, name);
+			query.setString(2, introduced);
+			query.setString(3, discontinued);
+			query.setLong(4, companyId);
+			query.setLong(5, oldId);
 			
 		} catch (SQLException e) {
 			logger.error(ERROR_DURING_QUERY);
 		}
-		return HikariCP.getInstance().commit(query,conn,  commit);
+		return hikari.commit(query,conn,  commit);
 
 	
 	}
@@ -251,17 +277,16 @@ introduced = newComputer.getIntroduced()!= null ? "'" +newComputer.getIntroduced
 	}
 
 	public Boolean delete(long id, boolean commit) {
-		Connection conn = HikariCP.getInstance().getConnection();
+		Connection conn = hikari.getConnection();
 		PreparedStatement query = null;
 		try {
-			StringBuilder sbuf = new StringBuilder();
-			Formatter fmt = new Formatter(sbuf);
-			fmt.format(DELETE, id);
-			query = conn.prepareStatement(sbuf.toString() );
+			query = conn.prepareStatement(DELETE );
+			query.setLong(1, id);
+			
 		} catch (SQLException e) {
 			logger.error(ERROR_DURING_QUERY);
 		}
-		return HikariCP.getInstance().commit(query, conn, commit);
+		return hikari.commit(query, conn, commit);
 	}
 
 
@@ -269,15 +294,12 @@ introduced = newComputer.getIntroduced()!= null ? "'" +newComputer.getIntroduced
 
 		Connection conn;
 		try {
-			conn = HikariCP.getInstance().getConnection();;
+			conn = hikari.getConnection();;
 			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			StringBuilder sbuf = new StringBuilder();
-			Formatter fmt = new Formatter(sbuf);
-			fmt.format(SELECT_ONE, computerID);
+			PreparedStatement query = conn.prepareStatement(SELECT_ONE);
+			query.setLong(1, computerID);
 			
-			String query = sbuf.toString() ;
-			ResultSet result =  state.executeQuery(query);
-			logger.info(sbuf.toString());
+			ResultSet result =  query.executeQuery();
 			ComputerFactory usineChinoise = new ComputerFactory();
 
 			if (result.first()) {

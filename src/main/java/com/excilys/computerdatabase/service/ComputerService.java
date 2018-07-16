@@ -2,12 +2,8 @@ package com.excilys.computerdatabase.service;
 
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.persistence.ComputerDao;
@@ -20,7 +16,7 @@ public class ComputerService extends AbstractService{
 	
 	
 	private static ComputerService INSTANCE;
-	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
+	//private Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	ComputerDao computerSql;
 	
 	private ComputerService() 

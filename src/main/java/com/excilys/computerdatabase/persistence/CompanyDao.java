@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ public class CompanyDao {
 	private String ERROR_DURING_QUERY = "Error during creation of a query.";
 	private String ROLLBACK = "Can't do the rollback: ";
 	private String DELETE = "DELETE FROM company  WHERE id = %s";
-	private String SELECT_SEARCH =  "SELECT * FROM company WHERE name LIKE '% /s %'" ;
+	private String SELECT_SEARCH =  "SELECT * FROM company WHERE name LIKE '% ? %'" ;
 	private String SELECT_ID = "SELECT * FROM company Where id = %s";
 
 
@@ -103,10 +102,8 @@ public class CompanyDao {
 		Connection conn = HikariCP.getInstance().getConnection(); 
 		PreparedStatement query = null;
 		try {
-			StringBuilder sbuf = new StringBuilder();
-			Formatter fmt = new Formatter(sbuf);
-			fmt.format(SELECT_SEARCH, name);
-			query = conn.prepareStatement(sbuf.toString() );
+			query = conn.prepareStatement(SELECT_SEARCH);
+			query.setString(1,name);
 		} catch (SQLException e) {
 			logger.error(ERROR_DURING_QUERY);
 		}
@@ -150,13 +147,14 @@ public class CompanyDao {
 		boolean result  = true;
 		ComputerDao computerDao = ComputerDao.getInstance();
 		
-		ArrayList<Computer> allComputerOfTheCompany = computerDao.search("",company.getName(),Integer.MAX_VALUE, 0L);
-		for (Computer computer : allComputerOfTheCompany) {
-			result  = result && computerDao.delete(computer, false);
-		}
+		
 		Connection conn = HikariCP.getInstance().getConnection(); 
 		PreparedStatement query = null;
 		try {
+			ArrayList<Computer> allComputerOfTheCompany = computerDao.search("",company.getName(),Integer.MAX_VALUE, 0L);
+			for (Computer computer : allComputerOfTheCompany) {
+				result  = result && computerDao.delete(computer, false);
+			}
 			query = conn.prepareStatement(DELETE + company.getId());
 		} catch (SQLException e) {
 			logger.error(ERROR_DURING_QUERY);

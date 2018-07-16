@@ -2,7 +2,6 @@ package com.excilys.computerdatabase.model;
 
 
 
-import org.springframework.stereotype.Repository;
 
 
 public class Company {

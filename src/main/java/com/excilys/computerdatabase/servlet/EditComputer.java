@@ -2,7 +2,6 @@ package com.excilys.computerdatabase.servlet;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 

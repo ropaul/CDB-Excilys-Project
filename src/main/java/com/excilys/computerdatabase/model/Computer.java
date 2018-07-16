@@ -2,7 +2,7 @@ package com.excilys.computerdatabase.model;
 
 import java.sql.Date;
 
-import javax.annotation.Resource;
+
 
 
 
