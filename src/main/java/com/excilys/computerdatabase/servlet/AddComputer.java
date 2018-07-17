@@ -25,9 +25,6 @@ import com.excilys.computerdatabase.service.ComputerService;
 @WebServlet("/addComputer")
 public class AddComputer extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	public static final String VUE          = "/static/jsp/addComputer.jsp";
 	public static final String NAME  = "name";
@@ -68,7 +65,7 @@ public class AddComputer extends HttpServlet {
 		Validation validateur = Validation.getInstance();
 
 
-		HashMap<String, String> erreurs = validateur.AddAndEditValidation(name, introduced, discontinued, idCompany);
+		HashMap<String, String> erreurs = validateur.addAndEditValidation(name, introduced, discontinued, idCompany);
 
 
 
@@ -98,7 +95,7 @@ public class AddComputer extends HttpServlet {
 			rd.forward(request,response);
 		} 
 		else {
-			ArrayList<Company> companies= CompanyService.getInstance().getAll();
+			ArrayList<Company> companies= companyService.getAll();
 			request.setAttribute( "companies", companies );
 			resultat = "Échec de l'inscription.";
 			request.setAttribute( ATT_ERREURS, erreurs );

@@ -83,7 +83,7 @@ public class EditComputer extends HttpServlet {
 		String computerId = request.getParameter( ID_COMPUTER );
 
 		Validation validateur = Validation.getInstance();
-		HashMap<String, String> erreurs = validateur.AddAndEditValidation(name, introduced, discontinued, idCompany);
+		HashMap<String, String> erreurs = validateur.addAndEditValidation(name, introduced, discontinued, idCompany);
 		
 		Company company = null;
 		if ( erreurs.isEmpty() ) {

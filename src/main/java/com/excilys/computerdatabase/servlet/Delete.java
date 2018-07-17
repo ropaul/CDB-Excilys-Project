@@ -28,7 +28,8 @@ public class Delete extends HttpServlet{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Autowired
-	CompanyService computerService;
+	CompanyService companyService;
+	ComputerService computerService;
 
 	
 	@Override
@@ -64,13 +65,13 @@ public class Delete extends HttpServlet{
 
 	public void deleteCompany(Long idCompany, Logger logger) {
 		
-		Company company = computerService.get(idCompany);
-		computerService.delete(company);
+		Company company = companyService.get(idCompany);
+		companyService.delete(company);
 		logger.info("Company delete:" + company);
 	}
 	
 	public void deleteComputer(String selection, Logger logger) {
-		ComputerService computerService = ComputerService.getInstance();
+		 
 		for (String value: selection.split(",")) {
 			computerService.delete(Long.parseLong(value));
 			logger.info("Computer delete. id =" + value);

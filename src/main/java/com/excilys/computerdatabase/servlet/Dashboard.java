@@ -21,8 +21,7 @@ import com.excilys.computerdatabase.model.ComputerPage;
 import com.excilys.computerdatabase.service.ComputerService;
 
 
-//
-//@RequestMapping("/dashboard")
+
 @WebServlet("/dashboard")
 public class Dashboard extends HttpServlet {
 
@@ -32,7 +31,7 @@ public class Dashboard extends HttpServlet {
 	private int nbPage = Constant.NB_PAGE;
 	Logger logger = LoggerFactory.getLogger(Dashboard.class);
 	@Autowired
-	ComputerService computerService ;//= ComputerService.getInstance();
+	ComputerService computerService ;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -44,9 +43,7 @@ public class Dashboard extends HttpServlet {
 	public void doGet( HttpServletRequest request, HttpServletResponse response )
 			throws ServletException, IOException{
 
-//		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(Dashboard.class);
-//		ComputerService computerService = ctx.getBean(ComputerService.class) ;//ComputerService.getInstance();
-		
+	
 		String paramPage = request.getParameter("page");
 		String paramNbPerPage = request.getParameter("perpage");
 		String paramSearch = request.getParameter("search");
@@ -62,7 +59,7 @@ public class Dashboard extends HttpServlet {
 		computers = computerService.getAll();
 
 		if (paramPage != null) {
-			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L);
+			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L, computerService);
 
 			CHOICE: switch(paramPage) {
 			case "n":
@@ -102,7 +99,7 @@ public class Dashboard extends HttpServlet {
 
 		}
 		else {
-			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L);
+			page = new ComputerPage(paramSearch, paramSearch, nbPage, 0L, computerService);
 		}
 
 		request.setAttribute( "computers", page.getPage() );

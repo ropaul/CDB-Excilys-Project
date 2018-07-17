@@ -15,47 +15,27 @@ import com.excilys.computerdatabase.Constant;
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 
-@Repository("companyDao")
+//@Repository
 public class CompanyDao {
 
 	String url = "jdbc:mysql://localhost:3306/computer-database-db";
-	static Logger logger;
-	private static CompanyDao INSTANCE = null;
+	static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
+
+	
+	HikariCP hikariCP = HikariCP.getInstance();
 	
 	@Autowired
-	HikariCP hikariCP;
+	ComputerDao computerDao;
 	
 	private String SELECT_ALL = "SELECT * FROM company";
 	private String ERROR_DURING_QUERY = "Error during creation of a query.";
 	private String ROLLBACK = "Can't do the rollback: ";
-	private String DELETE = "DELETE FROM company  WHERE id = %s";
+	private String DELETE = "DELETE FROM company  WHERE id = ?";
 	private String SELECT_SEARCH =  "SELECT * FROM company WHERE name LIKE '% ? %'" ;
-	private String SELECT_ID = "SELECT * FROM company Where id = %s";
+	private String SELECT_ID = "SELECT * FROM company Where id = ?";
 
 
-	private CompanyDao(){
-		
-		logger = LoggerFactory.getLogger(CompanyDao.class);
-		
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			logger.error(e.getMessage());
-		}
-	}
-	
-	public static CompanyDao getInstance() 
-	{   
-		if (INSTANCE == null){   
-			synchronized(CompanyDao.class){
-				if (INSTANCE == null){
-					INSTANCE = new CompanyDao();
-				}
-			}
-		}
-		return INSTANCE;
-	}
+
 	
 	private ArrayList<Company> getAll(PreparedStatement query, Connection conn){
 		ArrayList<Company>  companyList = new ArrayList<Company>();
@@ -115,7 +95,8 @@ public class CompanyDao {
 		Connection conn =  null;
 		try {
 			conn = HikariCP.getInstance().getConnection();;
-			PreparedStatement query =conn.prepareStatement( SELECT_ID + companyID);
+			PreparedStatement query =conn.prepareStatement( SELECT_ID);
+			query.setLong(1, companyID);
 			ResultSet result =  query.executeQuery();
 			conn.commit();
 			Company companyResult;
@@ -145,7 +126,7 @@ public class CompanyDao {
 	
 	public boolean delete(Company company, Boolean commit)  {
 		boolean result  = true;
-		ComputerDao computerDao = ComputerDao.getInstance();
+		
 		
 		
 		Connection conn = HikariCP.getInstance().getConnection(); 
@@ -153,7 +134,7 @@ public class CompanyDao {
 		try {
 			ArrayList<Computer> allComputerOfTheCompany = computerDao.search("",company.getName(),Integer.MAX_VALUE, 0L);
 			for (Computer computer : allComputerOfTheCompany) {
-				result  = result && computerDao.delete(computer, false);
+				result  = result && computerDao.delete(computer, false, conn);
 			}
 			query = conn.prepareStatement(DELETE + company.getId());
 		} catch (SQLException e) {
@@ -176,8 +157,8 @@ public class CompanyDao {
 
 	
 public static void main(String[] args) {
-		CompanyDao cd = CompanyDao.getInstance();
-		Company company = cd.get(1L).orElse(null);
+		CompanyDao companyDao = new CompanyDao();
+		ArrayList<Company> company = companyDao.getAll();
 		System.out.println(company);
 	}
 

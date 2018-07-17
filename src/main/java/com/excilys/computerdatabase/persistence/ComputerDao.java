@@ -10,62 +10,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import com.excilys.computerdatabase.Constant;
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 
-@Repository("computerDao")
+//@Repository
 public class ComputerDao {
 	String url = "jdbc:mysql://localhost:3306/computer-database-db";
-	Logger logger;
-	private static ComputerDao INSTANCE = null;
-	CompanyDao companyDAO = CompanyDao.getInstance();
-	HikariCP hikari =  HikariCP.getInstance();
+	Logger logger =LoggerFactory.getLogger(ComputerDao.class);
+
+	@Autowired
+	CompanyDao companyDao;
+
+	HikariCP hikariCP = HikariCP.getInstance();
 
 	private String ERROR_DURING_QUERY = "Error during creation of a query.";
 	private String ROLLBACK           = "Can't do the rollback: ";
 	private String SELECT_ALL         = "SELECT * FROM computer";
-	private String SELECT_ID          = "SELECT * FROM computer WHERE " + Constant.ID + " > %s LIMIT  %s";
-	private String SELECT_ONE         = "SELECT * FROM computer Where id = %s";
+	private String SELECT_ID          = "SELECT * FROM computer WHERE " + Constant.ID + " > ? LIMIT  ?";
+	private String SELECT_ONE         = "SELECT * FROM computer Where id = ?";
 	private String SELECT_SEARCH      = "SELECT * FROM computer WHERE " + Constant.NAME + " LIKE '%?%' AND"  + Constant.ID + " > ? LIMIT ?";
-	private String ADD                = "INSERT INTO computer  VALUES (%s, '%s',%s ,%s, %s )";
-	private String ADD_WHITHOUT_ID    = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES ( '%s',%s ,%s, %s )";
-	private String DELETE             = "DELETE FROM computer  WHERE id = %s";
-	private String UPDATE = "UPDATE  computer  SET " + Constant.NAME +" = %s, "+ 
-			Constant.INTRODUCED +" = %s, " +
-			Constant.DISCONTINUED +" = %s, " +
-			Constant.COMPAGNYID +" = %s " +
-			"WHERE " +  Constant.ID +" in (%s);";
-
-	private ComputerDao() 
-	{
-
-		logger = LoggerFactory.getLogger(ComputerDao.class);
-
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			logger.error(e.getMessage());
-		}
-	}
-
-	public static ComputerDao getInstance() 
-	{   
-		if (INSTANCE == null){   
-			synchronized(ComputerDao.class){
-				if (INSTANCE == null){
-					INSTANCE = new ComputerDao();
-				}
-			}
-		}
-		return INSTANCE;
-	}
+	private String ADD                = "INSERT INTO computer  VALUES (?, '?',? ,?, ? )";
+	private String ADD_WHITHOUT_ID    = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES ( '?',? ,?, ? )";
+	private String DELETE             = "DELETE FROM computer  WHERE id = ?";
+	private String UPDATE = "UPDATE  computer  SET " + Constant.NAME +" = ?, "+ 
+			Constant.INTRODUCED +" = ?, " +
+			Constant.DISCONTINUED +" = ?, " +
+			Constant.COMPAGNYID +" = ? " +
+			"WHERE " +  Constant.ID +" in (?);";
 
 
 
@@ -75,7 +53,7 @@ public class ComputerDao {
 
 
 		try {
-			companies = companyDAO.getAll();
+			companies = companyDao.getAll();
 			HashMap<Long, Company> companyPerID = new HashMap<Long, Company>();
 			for (Company company: companies) {
 				companyPerID.put(company.getId(), company);
@@ -115,7 +93,7 @@ public class ComputerDao {
 	}
 
 	public ArrayList<Computer> getAll(){
-		Connection conn = hikari.getConnection();
+		Connection conn = hikariCP.getConnection();
 		PreparedStatement query = null;
 		try {
 			query = conn.prepareStatement(SELECT_ALL);
@@ -127,7 +105,7 @@ public class ComputerDao {
 
 
 	public ArrayList<Computer> getAll(int number, Long idBegin) {
-		Connection conn = hikari.getConnection();
+		Connection conn = hikariCP.getConnection();
 		PreparedStatement query = null;
 		try {
 			query = conn.prepareStatement(SELECT_ID);
@@ -145,7 +123,7 @@ public class ComputerDao {
 
 	public ArrayList<Computer> search(String name, int number, Long idBegin) throws SQLException{
 
-		Connection conn = hikari.getConnection();
+		Connection conn = hikariCP.getConnection();
 		PreparedStatement query = conn.prepareStatement(SELECT_SEARCH);
 		query.setString(1, name);
 		query.setString(2, Constant.ID);
@@ -155,7 +133,7 @@ public class ComputerDao {
 	}
 
 	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin) {
-		Connection conn = hikari.getConnection();
+		Connection conn = hikariCP.getConnection();
 		String query = SELECT_ALL;
 		if ((nameCompany != null && nameCompany != "") ||
 				(nameComputer != null && nameComputer != "")||
@@ -170,7 +148,7 @@ public class ComputerDao {
 			}
 		}
 		if ((nameCompany != null && nameCompany != "")) {
-			ArrayList<Company> companies = companyDAO.search(nameCompany);
+			ArrayList<Company> companies = companyDao.search(nameCompany);
 			String idCompany = "(";
 			for (int i = 0;  i< companies.size(); i++) {
 				idCompany += (int) companies.get(i).getId() + ", ";
@@ -209,7 +187,7 @@ public class ComputerDao {
 			companyId =  c.getCompany().getId();
 		}
 		PreparedStatement query = null;
-		Connection conn = hikari.getConnection();
+		Connection conn = hikariCP.getConnection();
 		try {
 			if (id > 0) { 
 
@@ -235,8 +213,8 @@ public class ComputerDao {
 		}
 
 
-		return hikari.commit(query,conn, commit);
-		
+		return hikariCP.commit(query,conn, commit);
+
 
 	}
 
@@ -258,7 +236,7 @@ public class ComputerDao {
 		if (newComputer.getCompany() != null){
 			companyId =  newComputer.getCompany().getId();
 		}
-		Connection conn = hikari.getConnection();
+		Connection conn = hikariCP.getConnection();
 		PreparedStatement query = null;
 		try {
 			query = conn.prepareStatement(UPDATE );
@@ -271,18 +249,20 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			logger.error(ERROR_DURING_QUERY);
 		}
-		return hikari.commit(query,conn,  commit);
+		return hikariCP.commit(query,conn,  commit);
 
 
 	}
 
 
-	public Boolean delete(Computer c, boolean commit) {
-		return delete(c.getId(),  commit);
+	public Boolean delete(Computer c, boolean commit, Connection conn) {
+		return delete(c.getId(),  commit, conn);
 	}
 
-	public Boolean delete(long id, boolean commit) {
-		Connection conn = hikari.getConnection();
+	public Boolean delete(long id, boolean commit,Connection conn) {
+		if (conn == null) {
+			conn = hikariCP.getConnection();
+		}
 		PreparedStatement query = null;
 		try {
 			query = conn.prepareStatement(DELETE );
@@ -291,7 +271,7 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			logger.error(ERROR_DURING_QUERY);
 		}
-		return hikari.commit(query, conn, commit);
+		return hikariCP.commit(query, conn, commit);
 	}
 
 
@@ -299,7 +279,7 @@ public class ComputerDao {
 
 		Connection conn;
 		try {
-			conn = hikari.getConnection();;
+			conn = hikariCP.getConnection();;
 			Statement state = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			PreparedStatement query = conn.prepareStatement(SELECT_ONE);
 			query.setLong(1, computerID);
@@ -332,15 +312,20 @@ public class ComputerDao {
 	private class ComputerFactory{
 
 		HashMap<Long, Company> companyPerID;
+		@Autowired
+		CompanyDao companyDao ;
+
 
 		public ComputerFactory() {
-			CompanyDao companySql = CompanyDao.getInstance();
-			ArrayList<Company> companies = companySql.getAll();
+			CompanyDao companyDao = new CompanyDao();
+			ArrayList<Company> companies = companyDao.getAll();
 			companyPerID = new HashMap<Long, Company>();
 			for (Company company: companies) {
 				companyPerID.put(company.getId(), company);
 			}
 		}
+		
+		
 
 		private  Computer createComputer(Optional<Integer> idOptionnal,Optional<String> nameOptional, Optional<Date> introducedOptionnal, Optional<Date> DiscontinuedOptionnal, Optional<Integer> companyOptionnal) {
 			int id = idOptionnal.orElse(0);

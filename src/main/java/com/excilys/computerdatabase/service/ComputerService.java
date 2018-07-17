@@ -2,76 +2,64 @@ package com.excilys.computerdatabase.service;
 
 import java.util.ArrayList;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Repository;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.persistence.ComputerDao;
 
 
-@Configuration
-
-@Repository("computerService")
-public class ComputerService extends AbstractService{
+//@Service("computerService")
+public class ComputerService {
 	
 	
-	private static ComputerService INSTANCE;
+	
 	//private Logger logger = LoggerFactory.getLogger(ComputerService.class);
-	ComputerDao computerSql;
+	@Autowired
+	ComputerDao computerDao;
 	
-	private ComputerService() 
-	{
-		
-		computerSql = ComputerDao.getInstance();
-	}
-
-	
-	public static ComputerService getInstance() 
-	{   
-		if (INSTANCE == null){   
-			synchronized(ComputerService.class){
-				if (INSTANCE == null){
-					INSTANCE = new ComputerService();
-				}
-			}
-		}
-		return INSTANCE;
-	};
+	public void init(ServletConfig config) throws ServletException {
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+}
 	
 	public ArrayList<Computer> getAll(){
-		return computerSql.getAll();
+		return computerDao.getAll();
 		
 	}
 	
 	public ArrayList<Computer> getAll(int numberOfElement, long id){
-		return computerSql.getAll( numberOfElement, id);
+		return computerDao.getAll( numberOfElement, id);
 		
 	}
 
 	public Computer get(long id) {
-		return computerSql.get(id).orElse(null);
+		return computerDao.get(id).orElse(null);
 		
 	}
 	
 	public boolean add(Computer c) {
-		return computerSql.add(c, true);
+		return computerDao.add(c, true);
 	}
 	
 	public boolean update(Computer c) {
-		return computerSql.update(c, true);
+		return computerDao.update(c, true);
 	}
 	
 	public boolean delete(Computer c) {
-		return computerSql.delete(c, true);
+		return computerDao.delete(c, true, null);
 	}
 	
 	public Boolean delete(long id) {
-		return computerSql.delete(id, true);
+		return computerDao.delete(id, true, null);
 	}
 	
 	
 	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin) {
-		return computerSql.search(nameComputer, nameCompany, number,idBegin);
+		return computerDao.search(nameComputer, nameCompany, number,idBegin);
 		
 	}
 }

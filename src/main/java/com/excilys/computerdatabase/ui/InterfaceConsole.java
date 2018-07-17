@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.excilys.computerdatabase.Constant;
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
@@ -20,6 +22,9 @@ import com.excilys.computerdatabase.service.ComputerService;
 public class InterfaceConsole {
 
 	private static Scanner inputScanner = new Scanner(System. in );
+	@Autowired
+	static ComputerService computerService;
+	static CompanyService companyService;
 
 
 	/**
@@ -28,7 +33,7 @@ public class InterfaceConsole {
 	 */
 	public static void showListComputer() throws SQLException {
 
-		ComputerPage pageGenerator =  new ComputerPage("","",Constant.NB_PAGE, 0L);
+		ComputerPage pageGenerator =  new ComputerPage("","",Constant.NB_PAGE, 0L, computerService);
 		ArrayList<Computer> computers;
 		boolean next =  true;
 		String answer= "";
@@ -74,7 +79,7 @@ public class InterfaceConsole {
 		System.out.println("Please, enter the ID of the computer:" );
 
 		long id = inputScanner.nextLong();
-		Computer computer  = ComputerService.getInstance().get(id);
+		Computer computer  = computerService.get(id);
 
 		System.out.println(computer);
 		//inputScanner.close();
@@ -88,7 +93,7 @@ public class InterfaceConsole {
 	 */
 	public static void showListCompanies() throws SQLException {
 		
-		ArrayList<Company> companies  = CompanyService.getInstance().getAll();
+		ArrayList<Company> companies  = companyService.getAll();
 		for (Company company : companies) {
 			System.out.println("id = " + company.getId() + ", name = " + company.getName());
 		}
@@ -156,8 +161,7 @@ public class InterfaceConsole {
 
 		System.out.println("What is the id of the company ? If you don't know, press 0");
 		int companyID =  Integer.parseInt(inputScanner.next());
-		CompanyService cs = CompanyService.getInstance();
-		Company company  =  cs.get(companyID);
+		Company company  =  companyService.get(companyID);
 
 		Computer newComputer = new Computer(  name, company,  introduced,  discontinued);
 		return newComputer;
@@ -167,7 +171,6 @@ public class InterfaceConsole {
 	public static void createNewComputer() throws SQLException {
 
 		boolean isItok =  false;
-		ComputerService manager = ComputerService.getInstance();
 		while (isItok == false) {
 
 			Computer newComputer = questionnaireTocreateANewComputer();
@@ -177,7 +180,7 @@ public class InterfaceConsole {
 			switch(response) {
 			case "yes":
 				isItok = true;
-				manager.add(newComputer);
+				computerService.add(newComputer);
 				System.out.println(".\n.\n.\n Done.\n.\n.\n.\n");
 				break;
 			case "menu":
@@ -199,13 +202,12 @@ public class InterfaceConsole {
 	 */
 	public static void updateComputer() throws SQLException {
 		boolean isItok =  false;
-		ComputerService manager = ComputerService.getInstance();
 		while (isItok == false) {
 
 			System.out.println("Which is the id of the computer to update ? \n" );
 			int computerID =  Integer.parseInt(inputScanner.next());
 
-			Computer oldComputer = manager.get(computerID);
+			Computer oldComputer = computerService.get(computerID);
 
 			Computer newComputer = questionnaireTocreateANewComputer();
 			newComputer.setId(oldComputer.getId());
@@ -214,7 +216,7 @@ public class InterfaceConsole {
 			switch(response) {
 			case "yes":
 				isItok = true;
-				manager.update( newComputer);
+				computerService.update( newComputer);
 				break;
 			case "menu":
 				isItok = true;
@@ -236,20 +238,19 @@ public class InterfaceConsole {
 	 */
 	public static void deleteComputer() throws SQLException {
 		boolean isItok =  false;
-		ComputerService manager = ComputerService.getInstance();
 		while (isItok == false) {
 
 			System.out.println("Which is the id of the computer to delete ? \n" );
 			int computerID =  Integer.parseInt(inputScanner.next());
 
-			Computer oldComputer = manager.get(computerID);
+			Computer oldComputer = computerService.get(computerID);
 
 			System.out.println("Are you sure you want to delete this computer ?(write yes or no or menu) \n" + oldComputer);
 			String response =  inputScanner.next();
 			switch(response) {
 			case "yes":
 				isItok = true;
-				manager.delete(oldComputer);
+				computerService.delete(oldComputer);
 				break;
 			case "menu":
 				isItok = true;

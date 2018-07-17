@@ -11,7 +11,10 @@ import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 
 @Configuration
-@ComponentScan
+@ComponentScan(basePackages ="{com.excilys.computerdatabase.persistence,"
+		+ "com.excilys.computerdatabase.service,"
+		+ "com.excilys.computerdatabase.model,"
+		+ "com.excilys.computerdatabase.servlet}")
 public class Application {
 
 
@@ -19,25 +22,25 @@ public class Application {
 	@Bean("companyDao")
 	public CompanyDao getCompanyDao()
 	{
-		return CompanyDao.getInstance();
+		return new CompanyDao();
 	}
 
 	@Bean("computerDao")
 	public ComputerDao getComputerDao()
 	{
-		return ComputerDao.getInstance();
+		return new ComputerDao();
 	}
 
 	@Bean("companyService")
 	public CompanyService getCompanyService()
 	{
-		return CompanyService.getInstance();
+		return new CompanyService();
 	}
 
 	@Bean("computerService")
 	public ComputerService getComputerService()
 	{
-		return ComputerService.getInstance();
+		return new ComputerService();
 	}
 	
 	

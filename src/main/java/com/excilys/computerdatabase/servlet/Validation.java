@@ -20,7 +20,7 @@ public class Validation {
 	public static final String ID_COMPANY  = "companyId";
 	public static final String ATT_ERREURS  = "erreurs";
 	public static final String ATT_RESULTAT = "resultat";
-	CompanyService manager = CompanyService.getInstance();
+	CompanyService companyService;
 
 	private Validation() 
 	{
@@ -41,7 +41,7 @@ public class Validation {
 
 
 
-	public HashMap<String, String> AddAndEditValidation(String name, String introduced, String discontinued, String idCompany){
+	public HashMap<String, String> addAndEditValidation(String name, String introduced, String discontinued, String idCompany){
 		HashMap<String, String> erreurs = new HashMap<String, String>();
 		try {
 			validationNom(name);
@@ -101,7 +101,7 @@ public class Validation {
 		if (idCompany == null || idCompany == "" || Long.parseLong(idCompany) == 0L) return;
 		try {
 			
-			Company company = manager.get(Long.parseLong(idCompany));
+			Company company = companyService.get(Long.parseLong(idCompany));
 			if ( company == null  ) {
 				throw new ValidationException( "Company doesn't exists" );
 			}

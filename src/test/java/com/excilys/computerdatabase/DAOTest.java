@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
@@ -14,10 +15,11 @@ import com.excilys.computerdatabase.service.ComputerService;
 
 import junit.framework.TestCase;
 
-public class SqlManagerTest extends TestCase {
+public class DAOTest extends TestCase {
 
 
 	Logger log;
+//	@Autowired
 	ComputerService computerService;
 	CompanyService companyService;
 
@@ -30,8 +32,8 @@ public class SqlManagerTest extends TestCase {
 
 	protected void setUp() {
 		log = LoggerFactory.getLogger(this.getClass());
-		computerService = ComputerService.getInstance();
-		companyService = CompanyService.getInstance();
+		computerService = new ComputerService();
+		companyService = new CompanyService();
 
 		//		MockitoAnnotations.initMocks(this);
 	}
@@ -52,7 +54,6 @@ public class SqlManagerTest extends TestCase {
 		Company company = null;
 
 		company = companyService.get(1);
-System.out.println(company);
 		assertTrue(company != null);
 	}
 
@@ -62,7 +63,7 @@ System.out.println(company);
 		int id = 10000;
 
 		company = companyService.get(id);
-System.out.println(company);
+
 		assertTrue(company == null);
 	}
 

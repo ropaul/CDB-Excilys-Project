@@ -2,53 +2,34 @@ package com.excilys.computerdatabase.service;
 
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.persistence.CompanyDao;
 
-@Repository("companyService")
-public class CompanyService extends AbstractService{
+//@Service
+public class CompanyService {
 
 	
-	private static CompanyService INSTANCE;
-	private Logger logger= LoggerFactory.getLogger(CompanyService.class);
-	CompanyDao companySql;
 	
-	private CompanyService() 
-	{
-		
-		companySql = CompanyDao.getInstance();
-	}
-
-	public static CompanyService getInstance() 
-	{   
-		if (INSTANCE == null){   
-			synchronized(CompanyService.class){
-				if (INSTANCE == null){
-					INSTANCE = new CompanyService();
-					INSTANCE.logger.info("new instance of CompanyService");
-				}
-			}
-		}
-		return INSTANCE;
-	}
+	//private Logger logger= LoggerFactory.getLogger(CompanyService.class);
+	@Autowired
+	CompanyDao companyDao;
 	
 	public ArrayList<Company> getAll(){
-		return companySql.getAll();
+		return companyDao.getAll();
 		
 	}
 
 	public Company get(long id) {
 		
-		return companySql.get(id).orElse(null);
+		return companyDao.get(id).orElse(null);
 		
 	}
 	
 	public boolean delete(Company company) {
-		return companySql.delete(company, true);
+		return companyDao.delete(company, true);
 	}
 	
 	

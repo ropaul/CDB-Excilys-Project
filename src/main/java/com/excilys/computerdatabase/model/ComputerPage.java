@@ -2,12 +2,12 @@ package com.excilys.computerdatabase.model;
 
 import java.util.ArrayList;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.computerdatabase.service.ComputerService;
 
 
-@Resource
+
 public class ComputerPage {
 
 	int numberPerPage;
@@ -18,35 +18,42 @@ public class ComputerPage {
 	int numberOfPage;
 	String searchComputer;
 	String searchCompany;
+	
+	ComputerService computerService;
 
 
 	public ComputerPage() {
-		
+
 	}
-	
 
 
 
 
 
-	public ComputerPage(String searchComputer, String searchCompany, int numberPerPage, Long currentId) {
+
+	public ComputerPage(String searchComputer, String searchCompany, int numberPerPage, Long currentId, ComputerService computerService) {
 		this.numberPerPage = numberPerPage;
 		this.currentId = currentId;
 		this.searchCompany = searchCompany;
 		this.searchComputer =  searchComputer;
-		page = nextPage();
 		previousPage =  null;
 		numberOfPage = 0;
+		this.computerService = computerService;
+
+		page = nextPage();
 		
 	}
 
-	public ComputerPage(String searchComputer, String searchCompany, int numberPerPage, Long currentId, ArrayList<Computer> page,int numberOfPage) {
+	public ComputerPage(String searchComputer, String searchCompany, int numberPerPage, Long currentId, ArrayList<Computer> page,int numberOfPage, ComputerService computerService) {
 		this.numberPerPage = numberPerPage;
 		this.currentId = currentId;
 		this.page = page;
 		this.numberOfPage =  numberOfPage;
 		this.searchCompany = searchCompany;
 		this.searchComputer =  searchComputer;
+
+		this.computerService = computerService;
+
 	}
 
 
@@ -54,7 +61,7 @@ public class ComputerPage {
 		if (nextPage == null) {
 			ArrayList<Computer> newPage = this.nextPage();
 			if (!newPage.isEmpty()) {
-				nextPage = new ComputerPage(this.searchComputer, searchCompany, this.numberPerPage,currentId, newPage, numberOfPage+1 );
+				nextPage = new ComputerPage(this.searchComputer, searchCompany, this.numberPerPage,currentId, newPage, numberOfPage+1 ,this.computerService);
 				nextPage.setPreviousPage(this);
 				return nextPage;
 			}
@@ -66,13 +73,13 @@ public class ComputerPage {
 			return nextPage;
 		}
 	}
-	
+
 
 	public int getNumberOfPage() {
 		return numberOfPage;
 	}
 
-	
+
 
 	public ComputerPage getPreviousPage() {
 		return previousPage;
@@ -82,10 +89,9 @@ public class ComputerPage {
 		this.previousPage = previousPage;
 	}
 
-	
+
 	private ArrayList<Computer> nextPage() {
-			ComputerService computerService =  ComputerService.getInstance();
-			ArrayList<Computer> resultPage = computerService.search(searchComputer, searchCompany, numberPerPage, currentId);
+		ArrayList<Computer> resultPage = computerService.search(searchComputer, searchCompany, numberPerPage, currentId);
 		for (Computer c : resultPage) {
 			if (currentId < c.getId())
 				currentId = c.getId();
@@ -103,7 +109,7 @@ public class ComputerPage {
 		return page;
 	}
 
-	
+
 
 
 }
