@@ -57,7 +57,6 @@ public class Dashboard extends HttpServlet {
 		}
 
 
-		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 
 		computers = computerService.getAll();

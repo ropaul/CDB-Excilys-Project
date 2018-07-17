@@ -231,10 +231,12 @@ public class ComputerDao {
 			}
 		} catch (SQLException e) {
 			logger.error(ERROR_DURING_QUERY);
+			return false;
 		}
 
 
 		return hikari.commit(query,conn, commit);
+		
 
 	}
 

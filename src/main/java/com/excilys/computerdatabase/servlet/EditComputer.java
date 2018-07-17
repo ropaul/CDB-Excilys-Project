@@ -102,7 +102,12 @@ public class EditComputer extends HttpServlet {
 			long longComputerID = Long.parseLong(computerId);
 			Computer computer = new Computer(longComputerID, name, company, dateIntroduced, dateDiscontinued);
 			
-				computerService.update(computer);
+				if(computerService.update(computer) ==false) {
+					resultat = "error.";
+					request.setAttribute( ATT_RESULTAT, resultat );
+					RequestDispatcher rd = request.getRequestDispatcher("error");
+					rd.forward(request,response);
+				}
 		
 			resultat = "Succès de l'inscription.";
 			request.setAttribute( ATT_ERREURS, erreurs );

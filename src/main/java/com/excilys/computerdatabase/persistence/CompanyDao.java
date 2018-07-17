@@ -175,6 +175,11 @@ public class CompanyDao {
 
 
 	
+public static void main(String[] args) {
+		CompanyDao cd = CompanyDao.getInstance();
+		Company company = cd.get(1L).orElse(null);
+		System.out.println(company);
+	}
 
 
 

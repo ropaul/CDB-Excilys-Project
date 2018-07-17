@@ -85,7 +85,13 @@ public class AddComputer extends HttpServlet {
 			}
 			Computer computer = new Computer(name, company, dateIntroduced, dateDiscontinued);
 			
-			computerService.add(computer);
+			if (computerService.add(computer )== false){
+				resultat = "error";
+				request.setAttribute( ATT_RESULTAT, resultat );
+				RequestDispatcher rd = request.getRequestDispatcher("error");
+				rd.forward(request,response);
+				return;
+			}
 			resultat = "Succès de l'inscription.";
 			request.setAttribute( ATT_RESULTAT, resultat );
 			RequestDispatcher rd = request.getRequestDispatcher("dashboard");
