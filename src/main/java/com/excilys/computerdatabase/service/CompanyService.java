@@ -43,7 +43,7 @@ public class CompanyService extends AbstractService{
 
 	public Company get(long id) {
 		
-		return companySql.get(id).orElse(new Company());
+		return companySql.get(id).orElse(null);
 		
 	}
 	

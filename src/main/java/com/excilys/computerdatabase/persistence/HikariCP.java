@@ -20,7 +20,7 @@ public class HikariCP {
 	private static HikariCP INSTANCE = null;
 	private static HikariConfig config = new HikariConfig();
 	private static HikariDataSource ds;
-	String url = "jdbc:mysql://localhost:3306/computer-database-db";
+	String url = "jdbc:mysql://localhost:3306/computer-database-db?autoReconnect=true&useSSL=false";
 
 
 	private HikariCP(){

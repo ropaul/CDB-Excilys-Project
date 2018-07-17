@@ -49,7 +49,7 @@ public class ComputerService extends AbstractService{
 	}
 
 	public Computer get(long id) {
-		return computerSql.get(id).orElse(new Computer());
+		return computerSql.get(id).orElse(null);
 		
 	}
 	

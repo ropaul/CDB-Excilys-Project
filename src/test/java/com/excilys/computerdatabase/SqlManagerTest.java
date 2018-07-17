@@ -52,7 +52,7 @@ public class SqlManagerTest extends TestCase {
 		Company company = null;
 
 		company = companyService.get(1);
-
+System.out.println(company);
 		assertTrue(company != null);
 	}
 
@@ -62,7 +62,7 @@ public class SqlManagerTest extends TestCase {
 		int id = 10000;
 
 		company = companyService.get(id);
-
+System.out.println(company);
 		assertTrue(company == null);
 	}
 
