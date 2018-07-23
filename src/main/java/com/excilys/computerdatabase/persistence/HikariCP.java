@@ -41,8 +41,7 @@ public class HikariCP {
 		config.setAutoCommit(false);
 		ds = new HikariDataSource( config );
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

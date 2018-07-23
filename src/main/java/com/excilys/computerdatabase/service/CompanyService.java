@@ -3,10 +3,10 @@ package com.excilys.computerdatabase.service;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.persistence.CompanyDao;
+import com.excilys.computerdatabase.persistence.CompanyDaoSpring;
 
 //@Service
 public class CompanyService {
@@ -15,21 +15,21 @@ public class CompanyService {
 	
 	//private Logger logger= LoggerFactory.getLogger(CompanyService.class);
 	@Autowired
-	CompanyDao companyDao;
+	CompanyDaoSpring companyDaoSpring;
 	
 	public ArrayList<Company> getAll(){
-		return companyDao.getAll();
+		return companyDaoSpring.getAll();
 		
 	}
 
 	public Company get(long id) {
 		
-		return companyDao.get(id).orElse(null);
+		return companyDaoSpring.get(id).orElse(null);
 		
 	}
 	
 	public boolean delete(Company company) {
-		return companyDao.delete(company, true);
+		return companyDaoSpring.delete(company, true);
 	}
 	
 	

@@ -155,13 +155,6 @@ public class CompanyDao {
 	}
 
 
-	
-public static void main(String[] args) {
-		CompanyDao companyDao = new CompanyDao();
-		ArrayList<Company> company = companyDao.getAll();
-		System.out.println(company);
-	}
-
 
 
 }

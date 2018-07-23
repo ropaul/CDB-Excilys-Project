@@ -312,13 +312,14 @@ public class ComputerDao {
 	private class ComputerFactory{
 
 		HashMap<Long, Company> companyPerID;
+		
 		@Autowired
-		CompanyDao companyDao ;
+		CompanyDaoSpring companyDao ;
 
 
 		public ComputerFactory() {
-			CompanyDao companyDao = new CompanyDao();
-			ArrayList<Company> companies = companyDao.getAll();
+			CompanyDao companyDaoSpring = new CompanyDao();
+			ArrayList<Company> companies = companyDaoSpring.getAll();
 			companyPerID = new HashMap<Long, Company>();
 			for (Company company: companies) {
 				companyPerID.put(company.getId(), company);
