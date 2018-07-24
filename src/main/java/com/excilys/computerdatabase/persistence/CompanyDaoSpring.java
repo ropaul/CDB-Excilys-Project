@@ -1,8 +1,6 @@
 package com.excilys.computerdatabase.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -78,14 +75,14 @@ public class CompanyDaoSpring {
 	
 	public ArrayList<Company> search(String name)  {
 		
-			String query = SELECT_SEARCH.format(name);
+			String query = String.format(SELECT_SEARCH,name);
 		return getAll(query);
 	}
 
 	public Optional<Company> get(long companyID){
 		ArrayList<Company>  companyList = new ArrayList<Company>();
 		String query =  SELECT_ID;
-			query = query.format( Long.toString(companyID));
+			query = String.format(query, Long.toString(companyID));
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
 			
 			

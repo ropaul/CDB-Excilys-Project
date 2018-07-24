@@ -1,7 +1,5 @@
 package com.excilys.computerdatabase.persistence;
 
-import javax.sql.DataSource;
-
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class Configuration {

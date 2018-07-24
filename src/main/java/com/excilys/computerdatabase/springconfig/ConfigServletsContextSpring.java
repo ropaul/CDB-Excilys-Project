@@ -9,19 +9,19 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 
 
 
-	public class ConfigServletsContextSpring implements WebApplicationInitializer {
-
-		@Override
-		public void onStartup(ServletContext container) throws ServletException {
-			
-		      AnnotationConfigWebApplicationContext rootContext =
-		        new AnnotationConfigWebApplicationContext();
-		      rootContext.register(Application.class);
-
-		      container.addListener(new ContextLoaderListener(rootContext));
-		      
-		      rootContext.refresh();
-		}
+	public class ConfigServletsContextSpring {//implements WebApplicationInitializer {
+//
+//		@Override
+//		public void onStartup(ServletContext container) throws ServletException {
+//			
+//		      AnnotationConfigWebApplicationContext rootContext =
+//		        new AnnotationConfigWebApplicationContext();
+//		      rootContext.register(Application.class);
+//
+//		      container.addListener(new ContextLoaderListener(rootContext));
+//		      
+//		      rootContext.refresh();
+//		}
 
 		
 	}

@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import com.excilys.computerdatabase.persistence.CompanyDao;
 import com.excilys.computerdatabase.persistence.CompanyDaoSpring;
@@ -20,13 +23,28 @@ import com.excilys.computerdatabase.service.ComputerService;
 @ComponentScan(basePackages ={"com.excilys.computerdatabase.persistence",
 		"com.excilys.computerdatabase.service",
 		"com.excilys.computerdatabase.model",
-		"com.excilys.computerdatabase.servlet",
+//		"com.excilys.computerdatabase.servlet",
 		"com.excilys.computerdatabase.ui",
-"com.excilys.computerdatabase.springconfig"})
+		"com.excilys.computerdatabase.controller",
+		"com.excilys.computerdatabase.springconfig"})
 public class Application {
 
 	static Logger logger = LoggerFactory.getLogger(Application.class);
-
+	
+	
+	
+		@Bean
+	   public ViewResolver viewResolver() {
+	      InternalResourceViewResolver bean = new InternalResourceViewResolver();
+	 
+	      bean.setViewClass(JstlView.class);
+	      bean.setPrefix("/static/jsp/");
+	      bean.setSuffix(".jsp");
+	 
+	      return bean;
+	   }
+	
+	
 	@Bean("companyDao")
 	public CompanyDao getCompanyDao()
 	{
