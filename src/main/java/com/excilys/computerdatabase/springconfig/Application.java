@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.excilys.computerdatabase.controller.Validation;
 import com.excilys.computerdatabase.persistence.CompanyDao;
 import com.excilys.computerdatabase.persistence.CompanyDaoSpring;
 import com.excilys.computerdatabase.persistence.ComputerDao;
@@ -110,6 +111,15 @@ public class Application {
 		HikariCP dataSource = HikariCP.getInstance();
 
 		return dataSource;
+	}
+	
+	
+	@Bean("validatuon")
+	public Validation getValidation()
+	{
+		Validation validation= Validation.getInstance();
+
+		return validation;
 	}
 }
 

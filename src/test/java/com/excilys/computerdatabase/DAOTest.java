@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.service.CompanyService;
@@ -17,8 +19,9 @@ public class DAOTest extends TestCase {
 
 
 	Logger log;
-//	@Autowired
+	@Autowired
 	ComputerService computerService;
+	@Autowired
 	CompanyService companyService;
 
 

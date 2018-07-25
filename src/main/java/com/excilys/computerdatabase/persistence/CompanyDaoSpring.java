@@ -43,9 +43,9 @@ public class CompanyDaoSpring {
 	private String SELECT_ALL = "SELECT * FROM company";
 	private String ERROR_DURING_QUERY = "Error during creation of a query.";
 	private String ROLLBACK = "Can't do the rollback: ";
-	private String DELETE = "DELETE FROM company  WHERE id = ?";
-	private static String SELECT_SEARCH =  "SELECT * FROM company WHERE name LIKE '% ? %'" ;
-	private String SELECT_ID = "SELECT * FROM company Where id = ?";
+	private String DELETE = "DELETE FROM company  WHERE id = %s";
+	private static String SELECT_SEARCH =  "SELECT * FROM company WHERE name LIKE ' % %s %'" ;
+	private String SELECT_ID = "SELECT * FROM company Where id = %s";
 
 
 
@@ -92,7 +92,7 @@ public class CompanyDaoSpring {
 				
 			}
 			
-			return Optional.ofNullable(companyList.get(0));
+			return Optional.ofNullable(companyList.isEmpty() ? null:companyList.get(0));
 	}
 	
 	
@@ -117,9 +117,6 @@ public class CompanyDaoSpring {
 			}
 		}
 		
-		
-		
-		
 		return result;
  	}
 	
@@ -128,9 +125,5 @@ public class CompanyDaoSpring {
 		
 	}
 	
-	public static void main(String[] args) {
-		CompanyDaoSpring c = new CompanyDaoSpring();
-		System.out.println(c.getAll());
-	}
 	
 }

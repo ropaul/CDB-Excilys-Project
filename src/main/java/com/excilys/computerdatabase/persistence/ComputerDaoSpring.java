@@ -47,17 +47,17 @@ public class ComputerDaoSpring {
 	private String ERROR_DURING_QUERY = "Error during creation of a query.";
 	private String ROLLBACK           = "Can't do the rollback: ";
 	private String SELECT_ALL         = "SELECT * FROM computer";
-	private String SELECT_ID          = "SELECT * FROM computer WHERE " + Constant.ID + " > ? LIMIT  ?";
-	private String SELECT_ONE         = "SELECT * FROM computer Where id = ?";
-	private String SELECT_SEARCH      = "SELECT * FROM computer WHERE " + Constant.NAME + " LIKE '%?%' AND"  + Constant.ID + " > ? LIMIT ?";
-	private String ADD                = "INSERT INTO computer  VALUES (?, '?',? ,?, ? )";
-	private String ADD_WHITHOUT_ID    = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES ( '?',? ,?, ? )";
-	private String DELETE             = "DELETE FROM computer  WHERE id = ?";
-	private String UPDATE = "UPDATE  computer  SET " + Constant.NAME +" = ?, "+ 
-			Constant.INTRODUCED +" = ?, " +
-			Constant.DISCONTINUED +" = ?, " +
-			Constant.COMPAGNYID +" = ? " +
-			"WHERE " +  Constant.ID +" in (?);";
+	private String SELECT_ID          = "SELECT * FROM computer WHERE " + Constant.ID + " > %s LIMIT  %s";
+	private String SELECT_ONE         = "SELECT * FROM computer Where id = %s";
+	private String SELECT_SEARCH      = "SELECT * FROM computer WHERE " + Constant.NAME + " LIKE '%%s%' AND"  + Constant.ID + " > %s LIMIT %s";
+	private String ADD                = "INSERT INTO computer  VALUES (%s, '%s',%s ,%s, %s )";
+	private String ADD_WHITHOUT_ID    = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES ( '%s',%s ,%s, %s )";
+	private String DELETE             = "DELETE FROM computer  WHERE id = %s";
+	private String UPDATE = "UPDATE  computer  SET " + Constant.NAME +" = %s, "+ 
+			Constant.INTRODUCED +" = %s, " +
+			Constant.DISCONTINUED +" = %s, " +
+			Constant.COMPAGNYID +" = %s " +
+			"WHERE " +  Constant.ID +" in (%s);";
 
 
 
@@ -184,7 +184,9 @@ public class ComputerDaoSpring {
 		}
 
 
-		return (jdbcTemplate.queryForList(query) != null);
+		jdbcTemplate.execute(query);
+		
+		return true;
 
 
 	}
@@ -302,9 +304,6 @@ public class ComputerDaoSpring {
 
 	}
 	
-	public static  void main(String[] args) {
-		ComputerDaoSpring c = new ComputerDaoSpring();
-		System.out.println(c.getAll());
-	}
+	
 
 }
