@@ -1,10 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-<title>Computer Database</title>
+<title><spring:message code="dashboard.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -15,16 +17,21 @@
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<a class="navbar-brand" href="dashboard"> Application - Computer
-				Database </a>
-		</div>
+		<%-- <div class="container">
+			<a class="navbar-brand" href="dashboard"> <spring:message code="dashboard.subtitle" /></a>
+		</div> --%>
+		<div>
+		<a class="navbar-brand" href="dashboard"> <spring:message code="dashboard.subtitle" /></a>
+			  <a class="navbar-brand pull-right" href="?lang=<spring:message code="alter_language"/>">
+			 <img src="static/image/flag_<spring:message code="alter_language"/>.png"
+			style="height:50dp;width:50dp;margin:15dp;" alt=<spring:message code="alter_language"/> /></a>
+</div>
 	</header>
 	
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${nbComputers} Computers found</h1>
+			<h1 id="homeTitle">${nbComputers} <spring:message code="dashboard.nbcomputer" /></h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
@@ -36,9 +43,9 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="dashboard.add" />
+						<spring:message code="dashboard.computer" /></a> <a class="btn btn-default" id="editComputer" href="#"
+						onclick="$.fn.toggleEditMode();"><spring:message code="dashboard.edit" /></a>
 				</div>
 			</div>
 		</div>
@@ -59,10 +66,10 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
-						<th>Discontinued date</th>
-						<th>Company</th>
+						<th><spring:message code="dashboard.computername" /></th>
+						<th><spring:message code="dashboard.introduced" /></th>
+						<th><spring:message code="dashboard.discontinued" /></th>
+						<th><spring:message code="dashboard.company" /></th>
 						<th class="editMode" style="width: 60px; height: 22px;"> delete company </th>
 
 					</tr>

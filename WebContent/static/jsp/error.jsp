@@ -1,3 +1,5 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,16 +12,18 @@
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<a class="navbar-brand" href="dashboard"> Application -
-				Computer Database </a>
-		</div>
+		<div>
+		<a class="navbar-brand" href="dashboard"> <spring:message code="dashboard.subtitle" /></a>
+			  <a class="navbar-brand pull-right" href="?lang=<spring:message code="alter_language"/>">
+			 <img src="static/image/flag_<spring:message code="alter_language"/>.png"
+			style="height:50dp;width:50dp;margin:15dp;" alt=<spring:message code="alter_language"/> /></a>
+</div>
 	</header>
 
 	<section id="main">
 		<div class="container">
 			<div class="alert alert-danger">
-				Error 500: An error has occured! <br />
+				<spring:message code="error"/> <br />
 				<!-- stacktrace -->
 			</div>
 		</div>
