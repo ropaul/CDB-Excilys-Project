@@ -13,18 +13,14 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import com.excilys.computerdatabase.controller.Validation;
-import com.excilys.computerdatabase.persistence.CompanyDao;
 import com.excilys.computerdatabase.persistence.CompanyDaoSpring;
-import com.excilys.computerdatabase.persistence.ComputerDao;
 import com.excilys.computerdatabase.persistence.ComputerDaoSpring;
-import com.excilys.computerdatabase.persistence.HikariCP;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 
@@ -79,19 +75,7 @@ public class Application {
 	   }
 	
 	
-	@Bean("companyDao")
-	public CompanyDao getCompanyDao()
-	{
-		logger.info("creation of beans : companyDao");
-		return new CompanyDao();
-	}
-
-	@Bean("computerDao")
-	public ComputerDao getComputerDao()
-	{
-		logger.info("creation of beans : computerDao");
-		return new ComputerDao();
-	}
+	
 
 
 	@Bean("companyDaoSpring")
@@ -138,13 +122,6 @@ public class Application {
 			
 		}
 
-	@Bean("HikariCp")
-	public HikariCP getDataSource()
-	{
-		HikariCP dataSource = HikariCP.getInstance();
-
-		return dataSource;
-	}
 	
 	
 	@Bean("validation")

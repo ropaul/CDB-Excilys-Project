@@ -1,6 +1,5 @@
 package com.excilys.computerdatabase.controller;
 
-import org.apache.jasper.tagplugins.jstl.core.Redirect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import com.excilys.computerdatabase.service.ComputerService;
 
 public class DeleteController {
 
-	private static final long serialVersionUID = 1L;
 	
 	@Autowired
 	CompanyService companyService;

@@ -22,7 +22,7 @@ import com.excilys.computerdatabase.model.Computer;
 //@Repository
 public class ComputerDaoSpring {
 	String url = "jdbc:mysql://localhost:3306/computer-database-db";
-	Logger logger =LoggerFactory.getLogger(ComputerDao.class);
+	Logger logger =LoggerFactory.getLogger(ComputerDaoSpring.class);
 
 //	@Autowired
 	CompanyDaoSpring companyDaoSpring;

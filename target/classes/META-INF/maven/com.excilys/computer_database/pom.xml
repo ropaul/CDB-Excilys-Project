@@ -32,7 +32,9 @@
 		<javax_annotation.version>1.2           </javax_annotation.version>
 		<javax_inject.version>    1             </javax_inject.version>
 		<spring_jdbc.version>     5.0.7.RELEASE </spring_jdbc.version>
-
+		<javassist.version>       3.12.1.GA     </javassist.version>
+		<hibernate.version>       5.3.3.Final   </hibernate.version>
+		<spring_data_jpa.version> 2.0.8.RELEASE </spring_data_jpa.version>
 
 	</properties>
 
@@ -164,7 +166,24 @@
 			<version>${spring_jdbc.version}</version>
 		</dependency>
 		
-		
+	
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>${javassist.version}</version>
+        </dependency>
+
+		<dependency>
+        	<groupId>org.springframework.data</groupId>
+        	<artifactId>spring-data-jpa</artifactId>
+        	<version>${spring_data_jpa.version}</version>
+    	</dependency>
 
 	</dependencies>
 

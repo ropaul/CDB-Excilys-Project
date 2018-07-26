@@ -29,7 +29,7 @@ public class CompanyDaoSpring {
     JdbcTemplate jdbcTemplate ;
 	
 	String url = "jdbc:mysql://localhost:3306/computer-database-db";
-	Logger logger = LoggerFactory.getLogger(ComputerDao.class);
+	Logger logger = LoggerFactory.getLogger(ComputerDaoSpring.class);
 	
 	public CompanyDaoSpring() {
 		this.computerDaoSpring = new ComputerDaoSpring();
