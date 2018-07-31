@@ -1,12 +1,27 @@
 package com.excilys.computerdatabase.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.ui.ModelMap;
+
+
 
 @Entity
-public class Company {
+@Table (name= "company" , schema = "computer-database-db")
+public class Company implements Serializable {
 	
+	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1118096811410171303L;
+
 	private String name;
 	
 	@Id

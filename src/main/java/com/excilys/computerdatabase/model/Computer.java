@@ -1,10 +1,17 @@
 package com.excilys.computerdatabase.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.apache.maven.model.ModelBase;
+import org.springframework.ui.ModelMap;
 
 
 
@@ -12,12 +19,24 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Computer {
+@Table (name= "computer" , schema = "computer-database-db")
+public class Computer implements Serializable{
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8700123077969413712L;
+
 	@Id
 	@GeneratedValue
 	private long id;
+	
 	private String name;
+	@ManyToOne
+	@JoinTable (name = "company")
 	private Company company;
+	
 	private Date introduced;
 	private Date discontinued;
 
@@ -29,7 +48,9 @@ public class Computer {
 		super();
 		this.id = id;
 		this.name = name;
+		
 		this.company = companie;
+		
 		this.introduced = introduced;
 		this.discontinued = discotinued;
 		

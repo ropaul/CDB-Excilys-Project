@@ -6,59 +6,69 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.persistence.ComputerDaoSpring;
+import com.excilys.computerdatabase.persistence.ComputerDaoHibernate;
 
 
-//@Service("computerService")
+
 public class ComputerService {
 	
 	
 	
 	//private Logger logger = LoggerFactory.getLogger(ComputerService.class);
-	@Autowired
-	ComputerDaoSpring computerDaoSpring;
+//	@Autowired
+	ComputerDaoHibernate computerDaoHibernate;
 	
 	public void init(ServletConfig config) throws ServletException {
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 }
-	
+	@Transactional
 	public ArrayList<Computer> getAll(){
-		return computerDaoSpring.getAll();
+		return (ArrayList<Computer>) computerDaoHibernate.findAll();
 		
 	}
 	
-	public ArrayList<Computer> getAll(int numberOfElement, long id){
-		return computerDaoSpring.getAll( numberOfElement, id);
-		
-	}
+//	public ArrayList<Computer> getAll(int numberOfElement, long id){
+//		return computerDaoHibernate.getAll( numberOfElement, id);
+//		
+//	}
 
+	@Transactional
 	public Computer get(long id) {
-		return computerDaoSpring.get(id).orElse(null);
+		return computerDaoHibernate.findById(id).orElse(null);
 		
 	}
 	
+	@Transactional
 	public boolean add(Computer c) {
-		return computerDaoSpring.add(c, true);
+		return computerDaoHibernate.save(c) != null;
 	}
 	
+	@Transactional
 	public boolean update(Computer c) {
-		return computerDaoSpring.update(c, true);
+		return computerDaoHibernate.save(c) != null;
 	}
 	
+	@Transactional
 	public boolean delete(Computer c) {
-		return computerDaoSpring.delete(c, true);
+		computerDaoHibernate.delete(c);
+		return true;
 	}
 	
+	@Transactional
 	public Boolean delete(long id) {
-		return computerDaoSpring.delete(id, true);
+		computerDaoHibernate.delete(this.get(id));
+		return true;
 	}
 	
-	
+	@Transactional
 	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin) {
-		return computerDaoSpring.search(nameComputer, nameCompany, number,idBegin);
+		ArrayList<Computer> computers = (ArrayList<Computer>) computerDaoHibernate.findAll();
+		int index = computers.indexOf(this.get(idBegin));
+		return (ArrayList<Computer>) computers.subList(index, number);
 		
 	}
 }
