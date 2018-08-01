@@ -8,7 +8,7 @@ public class ControleInitialize extends AbstractAnnotationConfigDispatcherServle
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { Application.class,  JPAConfig.class };
+		return new Class[] { Application.class};
 	}
 
 	@Override

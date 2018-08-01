@@ -2,8 +2,10 @@ package com.excilys.computerdatabase.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -22,10 +24,13 @@ public class Company implements Serializable {
 	 */
 	private static final long serialVersionUID = -1118096811410171303L;
 
+	
+	@Column(name = "name")
 	private String name;
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true)
 	private long id;
 	
 	public Company() {

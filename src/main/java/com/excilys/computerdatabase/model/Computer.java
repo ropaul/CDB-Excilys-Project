@@ -3,8 +3,11 @@ package com.excilys.computerdatabase.model;
 import java.io.Serializable;
 import java.sql.Date;
 
+import javax.annotation.Nullable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
@@ -29,17 +32,27 @@ public class Computer implements Serializable{
 	private static final long serialVersionUID = -8700123077969413712L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true)
 	private long id;
 	
+	@Nullable
+	@Column(name = "name")
 	private String name;
-	@ManyToOne
-	@JoinTable (name = "company")
-	private Company company;
 	
+	@Nullable
+	@ManyToOne
+	@JoinTable (name = "company_id")
+	private Company company;
+	@Nullable
+	@Column(name = "introduced")
 	private Date introduced;
+	@Nullable
+	@Column(name = "discontinued")
 	private Date discontinued;
 
+	
+	
 	
 	public Computer() {
 	}
