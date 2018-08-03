@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.computerdatabase.model.Company;
 
-@Repository
+//@Repository
+@Transactional
 public interface CompanyDaoHibernate extends JpaRepository<Company, Long>{
 	
 	Company findById(int id);

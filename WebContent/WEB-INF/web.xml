@@ -8,6 +8,11 @@
   version="3.0">
 
 
+
+<context-param>
+  <param-name>spring.profiles.active</param-name>
+  <param-value>javaee</param-value>
+</context-param>
 <!-- <servlet>
 	<servlet-name>Test</servlet-name>
 	<servlet-class>com.excilys.computerdatabase.servlet.Test</servlet-class>

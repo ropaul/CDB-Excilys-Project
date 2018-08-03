@@ -18,17 +18,17 @@
 		<junit.version>           3.8.1         </junit.version>
 		<mockito.version>         2.19.0        </mockito.version>
 		<mockito_all.version>     1.10.19       </mockito_all.version>
-		<slf4j_api.version>       1.7.25        </slf4j_api.version>
-		<slf4j_log.version>       1.8.0-beta2   </slf4j_log.version>
+		<!-- <slf4j_api.version>       1.7.25        </slf4j_api.version>
+		<slf4j_log.version>       1.8.0-beta2   </slf4j_log.version> -->
 		<mysql.version>           5.1.6         </mysql.version>
 		<slf4j_simple.version>    1.7.25        </slf4j_simple.version>
 		<hikaricp.version>        2.6.1         </hikaricp.version>
-		<slf4j_ext.version>       1.8.0-beta2   </slf4j_ext.version>
+		<!-- <slf4j_ext.version>       1.8.0-beta2   </slf4j_ext.version> -->
 		<javax.version>           3.0.1         </javax.version>
 		<tomcat.version>          2.2           </tomcat.version>
 		<jstl.version>            1.2           </jstl.version>
-		<spring.version> 		  5.0.7.RELEASE </spring.version>
-		<spring_boot.version>	  2.0.4.RELEASE </spring_boot.version>
+		 <spring.version> 		  5.0.7.RELEASE </spring.version> 
+		<!-- <spring_boot.version>	  2.0.4.RELEASE </spring_boot.version> -->
 		<javax_annotation.version>1.2           </javax_annotation.version>
 		<javax_inject.version>    1             </javax_inject.version>
 		<spring_jdbc.version>     5.0.7.RELEASE </spring_jdbc.version>
@@ -39,11 +39,14 @@
 		<bytebuddy.version>       1.8.15        </bytebuddy.version>
 		<dom4j.version>           1.6.1           </dom4j.version>
 		<spring_autoconfigure.version> 2.0.4.RELEASE </spring_autoconfigure.version>
+		 <version.spring-framework>5.0.0.RELEASE</version.spring-framework>
 	</properties>
 
 
 
 	<dependencies>
+	
+	
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -69,21 +72,21 @@
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-		<dependency>
+		 <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<!--<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j_api.version}</version>
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+		https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j_log.version}</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 
 
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -110,11 +113,11 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-ext -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-ext</artifactId>
 			<version>${slf4j_ext.version}</version>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -148,18 +151,18 @@
 
 
 		<!-- JSR-250 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
 			<version>${javax_annotation.version}</version>
-		</dependency>
+		</dependency> -->
 		<!-- JSR-330 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>${javax_inject.version}</version>
 		</dependency>
-
+ -->
 
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
@@ -174,23 +177,23 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <exclusions>
-        <exclusion>
-            <artifactId>jta</artifactId>
-            <groupId>javax.transaction</groupId>
-        </exclusion>
-        <!-- Exclude SLF4j to avoid version conflicts (we have 1.6.6, this drags 
-                in 1.6.1) -->
-        <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </exclusion>
-        <!-- Exclude dom4j to avoid version conflicts (we have 1.6, this drags 
-                in 1.6.1) -->
-        <exclusion>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-        </exclusion>
-    </exclusions>
+		        <exclusion>
+		            <artifactId>jta</artifactId>
+		            <groupId>javax.transaction</groupId>
+		        </exclusion>
+		        <!-- Exclude SLF4j to avoid version conflicts (we have 1.6.6, this drags 
+		                in 1.6.1) -->
+		         <exclusion>
+		            <groupId>org.slf4j</groupId>
+		            <artifactId>slf4j-api</artifactId>
+		        </exclusion> 
+		        <!-- Exclude dom4j to avoid version conflicts (we have 1.6, this drags 
+		                in 1.6.1) -->
+		        <exclusion>
+		            <groupId>dom4j</groupId>
+		            <artifactId>dom4j</artifactId>
+		        </exclusion>
+		    </exclusions>
             <version>${hibernate.version}</version>
             
         </dependency>
@@ -206,42 +209,40 @@
         	<artifactId>spring-data-jpa</artifactId>
         	<version>${spring_data_jpa.version}</version>
     	</dependency>
-    	
+    	<!-- 
     	<dependency>
       		<groupId>javax.transaction</groupId>
       		<artifactId>jta</artifactId>
       		<version>${javax_transaction.version}</version>
-  		</dependency>
+  		</dependency> -->
   		
   		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-dep -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy-dep</artifactId>
 			<version>${bytebuddy.version}</version>
-		</dependency>
-  		
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot</artifactId>
-		    <version>${spring_boot.version}</version>
-		</dependency>
-
-
-
+		</dependency> -->
 		<dependency>
 		    <groupId>dom4j</groupId>
 		    <artifactId>dom4j</artifactId>
 		    <version>${dom4j.version}</version>
 		</dependency> 
 		
-		
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-autoconfigure</artifactId>
-		    <version>${spring_autoconfigure.version}</version>
+		 <dependency>
+			<groupId>org.springframework</groupId>
+		     <artifactId>spring-orm</artifactId>
+		     <version>${version.spring-framework}</version>
+		    </dependency>
+		    <dependency>
+		      <groupId>org.springframework</groupId>
+		      <artifactId>spring-expression</artifactId>
+		      <version>${version.spring-framework}</version>
+		    </dependency>
+		    <dependency>
+		      <groupId>org.springframework</groupId>
+		      <artifactId>spring-test</artifactId>
+		      <version>${version.spring-framework}</version>
+		      <scope>test</scope>
 		</dependency>
 
 

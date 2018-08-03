@@ -7,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.computerdatabase.model.Computer;
 
-@Repository
+//@Repository
+@Transactional
 public interface ComputerDaoHibernate extends JpaRepository<Computer, Long>{
 	
 	Computer findById(int id);

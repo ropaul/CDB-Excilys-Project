@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.sql.DataSource;
 
 import org.hibernate.annotations.Filter;
@@ -18,21 +20,25 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -45,13 +51,13 @@ import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+//import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Configuration
 @ComponentScan(basePackages ={
-//		"com.excilys.computerdatabase.persistence",
+		"com.excilys.computerdatabase.persistence",
 		"com.excilys.computerdatabase.service",
-//		"com.excilys.computerdatabase.model",
+		"com.excilys.computerdatabase.model",
 		"com.excilys.computerdatabase.ui",
 		"com.excilys.computerdatabase.controller",
 "com.excilys.computerdatabase.springconfig"})
@@ -67,21 +73,21 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager"
 )
 @PropertySource("classpath:configuration.properties")
-@EntityScan(basePackages ={
+//@EntityScan(basePackages ={
 //		"com.excilys.computerdatabase.persistence",
 //		"com.excilys.computerdatabase.service",
-		"com.excilys.computerdatabase.model",
+//		"com.excilys.computerdatabase.model",
 //		"com.excilys.computerdatabase.ui",
 //		"com.excilys.computerdatabase.controller",
 //"com.excilys.computerdatabase.springconfig"
-		})
-//@EnableWebMvc
+	//	})
+@EnableWebMvc
 @PropertySource("classpath:configuration.properties")
-public class Application {//implements DisposableBean{
+public class Application implements WebMvcConfigurer{//implements DisposableBean{
 
 	static Logger logger = LoggerFactory.getLogger(Application.class);
 
-	//spring DATA PART 2
+
 
 	private static final String INIT_MESSAGE = "Initiate...";
 	private static final String ACK_MESSAGE = "OK";
@@ -103,6 +109,7 @@ public class Application {//implements DisposableBean{
 	}
 	
 	@Bean
+	@PersistenceUnit
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		logger.info("EntityManagedFactory: {}", INIT_MESSAGE);
 		LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
@@ -112,9 +119,10 @@ public class Application {//implements DisposableBean{
 		logger.info("EntityManagedFactory: {}", ACK_MESSAGE);
 		return lemfb;
 	}
-	
+
 	
 	@Bean
+	@PersistenceContext
     public JpaTransactionManager transactionManager() {
 		logger.info("transactionManager: {}", INIT_MESSAGE);
 		JpaTransactionManager txnMgr = new JpaTransactionManager();
@@ -133,8 +141,9 @@ public class Application {//implements DisposableBean{
 
 	// SPRING DATA JPA
 
-//	
+	
 	@Bean//(destroyMethod = "close")
+	@Profile("javaee")
     DataSource dataSource(Environment env) {
         HikariConfig dataSourceConfig = new HikariConfig();
         dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
@@ -144,7 +153,11 @@ public class Application {//implements DisposableBean{
  
         return new HikariDataSource(dataSourceConfig);
     }
-     
+	
+	
+	
+	
+	
 //    @Bean
 //    LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 //        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -174,16 +187,16 @@ public class Application {//implements DisposableBean{
 //        entityManagerFactoryBean.setJpaProperties(jpaProperties);
 //        return entityManagerFactoryBean;
 //    }
-    
-    
-   
-    
-    @Bean
-    JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
-        return transactionManager;
-    }
+//    
+//    
+//   
+//    
+//    @Bean
+//    JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+//        JpaTransactionManager transactionManager = new JpaTransactionManager();
+//        transactionManager.setEntityManagerFactory(entityManagerFactory);
+//        return transactionManager;
+//    }
 
 
 	//SPRING MVC
@@ -197,12 +210,12 @@ public class Application {//implements DisposableBean{
 	}
 
 
-//	@Bean
-//	public LocaleChangeInterceptor localeInterceptor(){
-//		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
-//		interceptor.setParamName("lang");
-//		return interceptor;
-//	}
+	@Bean
+	public LocaleChangeInterceptor localeInterceptor(){
+		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+		interceptor.setParamName("lang");
+		return interceptor;
+	}
 
 
 	@Bean
