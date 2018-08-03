@@ -1,6 +1,7 @@
 package com.excilys.computerdatabase.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,60 +16,69 @@ import com.excilys.computerdatabase.persistence.ComputerDaoHibernate;
 
 
 public class ComputerService {
-	
-	
-	
+
+
+
 	//private Logger logger = LoggerFactory.getLogger(ComputerService.class);
-//	@Autowired
+	@Autowired
 	ComputerDaoHibernate computerDaoHibernate;
-	
+
 	public void init(ServletConfig config) throws ServletException {
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-}
+	}
 	@Transactional
 	public ArrayList<Computer> getAll(){
+		System.out.println(computerDaoHibernate.findAll());
 		return (ArrayList<Computer>) computerDaoHibernate.findAll();
-		
+
 	}
-	
-//	public ArrayList<Computer> getAll(int numberOfElement, long id){
-//		return computerDaoHibernate.getAll( numberOfElement, id);
-//		
-//	}
+
+	//	public ArrayList<Computer> getAll(int numberOfElement, long id){
+	//		return computerDaoHibernate.getAll( numberOfElement, id);
+	//		
+	//	}
 
 	@Transactional
 	public Computer get(long id) {
 		return computerDaoHibernate.findById(id).orElse(null);
-		
+
 	}
-	
+
 	@Transactional
 	public boolean add(Computer c) {
 		return computerDaoHibernate.save(c) != null;
 	}
-	
+
 	@Transactional
 	public boolean update(Computer c) {
 		return computerDaoHibernate.save(c) != null;
 	}
-	
+
 	@Transactional
 	public boolean delete(Computer c) {
 		computerDaoHibernate.delete(c);
 		return true;
 	}
-	
+
 	@Transactional
 	public Boolean delete(long id) {
 		computerDaoHibernate.delete(this.get(id));
 		return true;
 	}
-	
+
 	@Transactional
 	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin) {
 		ArrayList<Computer> computers = (ArrayList<Computer>) computerDaoHibernate.findAll();
-		int index = computers.indexOf(this.get(idBegin));
-		return (ArrayList<Computer>) computers.subList(index, number);
-		
+		int index;
+		if (computers.indexOf(this.get(idBegin)) != -1) {
+			index = computers.indexOf(this.get(idBegin));
+		}
+		else {
+			index = 0;
+		}
+		ArrayList<Computer> result = new ArrayList<Computer>();
+		result.addAll( computers.subList(index, number));
+		return  result;
+
 	}
 }

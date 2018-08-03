@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -42,7 +43,7 @@ public class Computer implements Serializable{
 	
 	@Nullable
 	@ManyToOne
-	@JoinTable (name = "company_id")
+	@JoinColumn (name = "company_id")
 	private Company company;
 	@Nullable
 	@Column(name = "introduced")

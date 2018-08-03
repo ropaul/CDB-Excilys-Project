@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.persistence.CompanyDaoHibernate;
-import com.excilys.computerdatabase.persistence.CompanyDaoSpring;
 
 //@Service
 
@@ -16,7 +15,7 @@ public class CompanyService {
 	
 	
 	//private Logger logger= LoggerFactory.getLogger(CompanyService.class);
-//	@Autowired
+	@Autowired
 	CompanyDaoHibernate companyDaoHibernate;
 	
 	@Transactional

@@ -39,8 +39,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import com.excilys.computerdatabase.controller.Validation;
-import com.excilys.computerdatabase.persistence.CompanyDaoSpring;
-import com.excilys.computerdatabase.persistence.ComputerDaoSpring;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 import com.zaxxer.hikari.HikariConfig;
@@ -102,16 +100,16 @@ public class Application {//implements DisposableBean{
 		return jpaVendorAdapter;
 	}
 	
-	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		logger.info("EntityManagedFactory: {}", INIT_MESSAGE);
-		LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
-		lemfb.setDataSource(dataSource);
-		lemfb.setJpaVendorAdapter(jpaVendorAdapter());
-		lemfb.setPackagesToScan("com.excilys.formation.computerdatabase");
-		logger.info("EntityManagedFactory: {}", ACK_MESSAGE);
-		return lemfb;
-	}
+//	@Bean
+//	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+//		logger.info("EntityManagedFactory: {}", INIT_MESSAGE);
+//		LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
+//		lemfb.setDataSource(dataSource);
+//		lemfb.setJpaVendorAdapter(jpaVendorAdapter());
+//		lemfb.setPackagesToScan("com.excilys.formation.computerdatabase");
+//		logger.info("EntityManagedFactory: {}", ACK_MESSAGE);
+//		return lemfb;
+//	}
 	
 	
 	@Bean
@@ -145,35 +143,35 @@ public class Application {//implements DisposableBean{
         return new HikariDataSource(dataSourceConfig);
     }
      
-//    @Bean
-//    LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-//        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-//        entityManagerFactoryBean.setDataSource(dataSource);
-//        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-//        entityManagerFactoryBean.setPackagesToScan("com.excilys.computerdatabase");
-//        Properties jpaProperties = new Properties();
-//        //Configures the used database dialect. This allows Hibernate to create SQL
-//        //that is optimized for the used database.
-//        jpaProperties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
-//        //Specifies the action that is invoked to the database when the Hibernate
-//        //SessionFactory is created or closed.
-//        jpaProperties.put("hibernate.hbm2ddl.auto", 
-//        		environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
-//        //Configures the naming strategy that is used when Hibernate creates
-//        //new database objects and schema elements
-//        jpaProperties.put("hibernate.ejb.naming_strategy", 
-//        		environment.getRequiredProperty("hibernate.ejb.naming_strategy"));
-//        //If the value of this property is true, Hibernate writes all SQL
-//        //statements to the console.
-//        jpaProperties.put("hibernate.show_sql", 
-//        		environment.getRequiredProperty("hibernate.show_sql"));
-//        //If the value of this property is true, Hibernate will format the SQL
-//        //that is written to the console.
-//        jpaProperties.put("hibernate.format_sql", 
-//        		environment.getRequiredProperty("hibernate.format_sql"));
-//        entityManagerFactoryBean.setJpaProperties(jpaProperties);
-//        return entityManagerFactoryBean;
-//    }
+    @Bean
+    LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactoryBean.setDataSource(dataSource);
+        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManagerFactoryBean.setPackagesToScan("com.excilys.computerdatabase");
+        Properties jpaProperties = new Properties();
+        //Configures the used database dialect. This allows Hibernate to create SQL
+        //that is optimized for the used database.
+        jpaProperties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+        //Specifies the action that is invoked to the database when the Hibernate
+        //SessionFactory is created or closed.
+        jpaProperties.put("hibernate.hbm2ddl.auto", 
+        		environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
+        //Configures the naming strategy that is used when Hibernate creates
+        //new database objects and schema elements
+        jpaProperties.put("hibernate.ejb.naming_strategy", 
+        		environment.getRequiredProperty("hibernate.ejb.naming_strategy"));
+        //If the value of this property is true, Hibernate writes all SQL
+        //statements to the console.
+        jpaProperties.put("hibernate.show_sql", 
+        		environment.getRequiredProperty("hibernate.show_sql"));
+        //If the value of this property is true, Hibernate will format the SQL
+        //that is written to the console.
+        jpaProperties.put("hibernate.format_sql", 
+        		environment.getRequiredProperty("hibernate.format_sql"));
+        entityManagerFactoryBean.setJpaProperties(jpaProperties);
+        return entityManagerFactoryBean;
+    }
     
     
    
@@ -240,20 +238,6 @@ public class Application {//implements DisposableBean{
 		logger.info("creation of beans : computerService");
 		return new ComputerService();
 	}
-
-
-	@Bean
-	public DriverManagerDataSource getDriverManagerDataSource(Environment env){
-		logger.info("creation of beans : dataSource");
-		DriverManagerDataSource dataSource=  new DriverManagerDataSource();
-		dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
-        dataSource.setUrl(env.getRequiredProperty("db.url"));
-        dataSource.setUsername(env.getRequiredProperty("db.username"));
-        dataSource.setPassword(env.getRequiredProperty("db.password"));
-		return dataSource;
-
-	}
-
 
 
 	@Bean("validation")
