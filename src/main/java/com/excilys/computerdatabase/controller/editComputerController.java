@@ -102,8 +102,11 @@ public class editComputerController {
 
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String home(ModelMap model) {
-		return "addComputer";
+	public String home(ModelMap model, @RequestParam(name = ID_COMPUTER,required = false) String idComputer) {
+		if (idComputer != null) {
+		model.addAttribute( "computer", computerService.get(Long.parseLong(idComputer)));
+		}
+		return "editComputer";
 	}
 
 }

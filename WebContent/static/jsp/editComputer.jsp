@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="dashboard.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link href="static/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -43,7 +43,7 @@
 									<span class="erreur">${erreurs['introduced']}</span>
 							</div>
 							<div class="form-group">
-								<label for="discontinued"><spring:message code="dashboard.dicontinued"/></label> 
+								<label for="discontinued"><spring:message code="dashboard.discontinued"/></label> 
 								<input type="date" class="form-control" id="discontinued" name="discontinued" value="${computer.discontinued}"
 									placeholder="Discontinued date">
 									<span class="erreur">${erreurs['discontinued']}</span>
