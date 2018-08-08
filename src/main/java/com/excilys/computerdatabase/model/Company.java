@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.ui.ModelMap;
 
 
 
@@ -17,11 +16,6 @@ import org.springframework.ui.ModelMap;
 @Table (name= "company" , schema = "computer-database-db")
 public class Company implements Serializable {
 	
-	
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1118096811410171303L;
 
 	

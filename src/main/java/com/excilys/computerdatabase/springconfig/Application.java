@@ -8,11 +8,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-
-import org.hibernate.annotations.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +20,6 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -32,9 +28,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -47,40 +41,27 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Configuration
 @ComponentScan(basePackages ={
-//		"com.excilys.computerdatabase.persistence",
 		"com.excilys.computerdatabase.service",
-//		"com.excilys.computerdatabase.model",
 		"com.excilys.computerdatabase.ui",
 		"com.excilys.computerdatabase.controller",
 "com.excilys.computerdatabase.springconfig"})
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages ={
 		"com.excilys.computerdatabase.persistence",
-//		"com.excilys.computerdatabase.service",
-//		"com.excilys.computerdatabase.model",
-//		"com.excilys.computerdatabase.ui",
-//		"com.excilys.computerdatabase.controller",
-//"com.excilys.computerdatabase.springconfig"
 		},
 entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager"
 )
 @PropertySource("classpath:configuration.properties")
 @EntityScan(basePackages ={
-//		"com.excilys.computerdatabase.persistence",
-//		"com.excilys.computerdatabase.service",
 		"com.excilys.computerdatabase.model",
-//		"com.excilys.computerdatabase.ui",
-//		"com.excilys.computerdatabase.controller",
-//"com.excilys.computerdatabase.springconfig"
 		})
-//@EnableWebMvc
+
 @PropertySource("classpath:configuration.properties")
 public class Application {//implements DisposableBean{
 
 	static Logger logger = LoggerFactory.getLogger(Application.class);
 
-	//spring DATA PART 2
-
+	//spring DATA PART
 	private static final String INIT_MESSAGE = "Initiate...";
 	private static final String ACK_MESSAGE = "OK";
 		
@@ -100,17 +81,6 @@ public class Application {//implements DisposableBean{
 		return jpaVendorAdapter;
 	}
 	
-//	@Bean
-//	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-//		logger.info("EntityManagedFactory: {}", INIT_MESSAGE);
-//		LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
-//		lemfb.setDataSource(dataSource);
-//		lemfb.setJpaVendorAdapter(jpaVendorAdapter());
-//		lemfb.setPackagesToScan("com.excilys.formation.computerdatabase");
-//		logger.info("EntityManagedFactory: {}", ACK_MESSAGE);
-//		return lemfb;
-//	}
-	
 	
 	@Bean
     public JpaTransactionManager transactionManager() {
@@ -129,10 +99,7 @@ public class Application {//implements DisposableBean{
 	
 	
 
-	// SPRING DATA JPA
-
-//	
-	@Bean//(destroyMethod = "close")
+	@Bean
     DataSource dataSource(Environment env) {
         HikariConfig dataSourceConfig = new HikariConfig();
         dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
@@ -195,14 +162,6 @@ public class Application {//implements DisposableBean{
 	}
 
 
-//	@Bean
-//	public LocaleChangeInterceptor localeInterceptor(){
-//		LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
-//		interceptor.setParamName("lang");
-//		return interceptor;
-//	}
-
-
 	@Bean
 	public LocaleResolver localeResolver() {
 		CookieLocaleResolver localeResolver = new CookieLocaleResolver();
@@ -212,6 +171,10 @@ public class Application {//implements DisposableBean{
 		return localeResolver;
 	}
 
+	
+	// COMPUTER DATABASE
+	
+	
 	@Bean
 	public ViewResolver viewResolver() {
 		InternalResourceViewResolver bean = new InternalResourceViewResolver();

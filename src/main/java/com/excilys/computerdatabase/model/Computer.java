@@ -10,12 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.apache.maven.model.ModelBase;
-import org.springframework.ui.ModelMap;
 
 
 
@@ -26,10 +22,6 @@ import org.springframework.ui.ModelMap;
 @Table (name= "computer" , schema = "computer-database-db")
 public class Computer implements Serializable{
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8700123077969413712L;
 
 	@Id

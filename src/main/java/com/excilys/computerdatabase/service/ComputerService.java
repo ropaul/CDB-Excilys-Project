@@ -1,7 +1,6 @@
 package com.excilys.computerdatabase.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -28,7 +27,6 @@ public class ComputerService {
 	}
 	@Transactional
 	public ArrayList<Computer> getAll(){
-		System.out.println(computerDaoHibernate.findAll());
 		return (ArrayList<Computer>) computerDaoHibernate.findAll();
 
 	}
@@ -68,16 +66,31 @@ public class ComputerService {
 
 	@Transactional
 	public ArrayList<Computer> search(String nameComputer, String nameCompany, int number, Long idBegin) {
-		ArrayList<Computer> computers = (ArrayList<Computer>) computerDaoHibernate.findAll();
+		ArrayList<Computer> allComputers = (ArrayList<Computer>) computerDaoHibernate.findAll();
+		nameComputer =  nameComputer == null ? "": nameComputer;
+		nameCompany =  nameCompany == null ? "": nameCompany;
+		ArrayList<Computer> computers = new ArrayList<Computer>();
+		for (Computer c : allComputers) {
+			if (c.getName().contains(nameComputer) || c.getCompany().getName().contains(nameCompany)) {
+				computers.add(c);
+			}
+		}
 		int index;
+	
 		if (computers.indexOf(this.get(idBegin)) != -1) {
 			index = computers.indexOf(this.get(idBegin));
 		}
 		else {
 			index = 0;
 		}
+//		System.out.printf("number  = %s , idBegin = %s , index = %s \n", number, idBegin, index);
 		ArrayList<Computer> result = new ArrayList<Computer>();
-		result.addAll( computers.subList(index, number));
+		if (index + number >= computers.size()) {
+			result.addAll( computers.subList(index, computers.size() -1));
+		}
+		else {
+			result.addAll( computers.subList(index, index +number));
+		}
 		return  result;
 
 	}
