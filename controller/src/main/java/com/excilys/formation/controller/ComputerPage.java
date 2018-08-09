@@ -1,10 +1,11 @@
-package com.excilys.computerdatabase.controller;
+package com.excilys.formation.controller;
 
 import java.util.ArrayList;
 
-import com.excilys.computerdatabase.service.ComputerService;
-import com.excilys.computerdatabase.model.Company;
-import com.excilys.computerdatabase.model.Computer;
+import com.excilys.formation.model.Computer;
+import com.excilys.formation.service.ComputerService;
+
+
 
 
 public class ComputerPage {

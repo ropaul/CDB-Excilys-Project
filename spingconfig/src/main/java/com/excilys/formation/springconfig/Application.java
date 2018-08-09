@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.springconfig;
+package com.excilys.formation.springconfig;
 
 
 import java.util.Locale;
@@ -32,9 +32,9 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import com.excilys.computerdatabase.controller.Validation;
-import com.excilys.computerdatabase.service.CompanyService;
-import com.excilys.computerdatabase.service.ComputerService;
+import com.excilys.formation.controller.Validation;
+import com.excilys.formation.service.CompanyService;
+import com.excilys.formation.service.ComputerService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

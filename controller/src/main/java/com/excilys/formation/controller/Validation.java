@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controller;
+package com.excilys.formation.controller;
 
 import java.sql.Date;
 import java.util.HashMap;
@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.excilys.computerdatabase.model.Company;
-import com.excilys.computerdatabase.service.CompanyService;
+import com.excilys.formation.model.Company;
+import com.excilys.formation.service.CompanyService;
+
+
 
 public class Validation {
 

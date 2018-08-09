@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.service;
+package com.excilys.formation.service;
 
 import java.util.ArrayList;
 
@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.persistence.ComputerDaoHibernate;
+import com.excilys.formation.model.Computer;
+import com.excilys.formation.persistence.ComputerDaoHibernate;
+
+
 
 
 

@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase;
+package com.excilys.formation;
 
 public class Constant {
 	

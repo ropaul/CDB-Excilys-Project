@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controller;
+package com.excilys.formation.controller;
 
 public class ValidationException extends Exception{
 	

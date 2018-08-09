@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controller;
+package com.excilys.formation.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.excilys.computerdatabase.model.Company;
-import com.excilys.computerdatabase.service.CompanyService;
-import com.excilys.computerdatabase.service.ComputerService;
+import com.excilys.formation.model.Company;
+import com.excilys.formation.service.CompanyService;
+import com.excilys.formation.service.ComputerService;
 
 
 

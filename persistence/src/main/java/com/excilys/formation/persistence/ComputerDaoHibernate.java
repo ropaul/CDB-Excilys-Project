@@ -1,13 +1,10 @@
-package com.excilys.computerdatabase.persistence;
-
-import java.util.List;
+package com.excilys.formation.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.computerdatabase.model.Computer;
+import com.excilys.formation.model.Computer;
+
 
 @Repository
 public interface ComputerDaoHibernate extends JpaRepository<Computer, Long>{

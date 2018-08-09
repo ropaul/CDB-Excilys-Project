@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.model;
+package com.excilys.formation.model;
 
 import java.io.Serializable;
 import java.sql.Date;

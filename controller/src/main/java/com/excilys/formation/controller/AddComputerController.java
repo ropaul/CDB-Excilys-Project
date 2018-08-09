@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controller;
+package com.excilys.formation.controller;
 
 
 import java.sql.Date;
@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.excilys.computerdatabase.model.Company;
-import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.service.CompanyService;
-import com.excilys.computerdatabase.service.ComputerService;
+import com.excilys.formation.model.Company;
+import com.excilys.formation.model.Computer;
+import com.excilys.formation.service.CompanyService;
+import com.excilys.formation.service.ComputerService;
+
+
+
 
 @Controller
 @RequestMapping("/addComputer")

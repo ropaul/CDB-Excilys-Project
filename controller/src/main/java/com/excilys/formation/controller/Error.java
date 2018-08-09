@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controller;
+package com.excilys.formation.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
