@@ -6,12 +6,13 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.formation.model.Company;
 import com.excilys.formation.service.CompanyService;
 
 
-
+@Service
 public class Validation {
 
 	private static Validation INSTANCE;

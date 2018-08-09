@@ -32,7 +32,7 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import com.excilys.formation.controller.Validation;
+
 import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
 import com.zaxxer.hikari.HikariConfig;
@@ -201,13 +201,13 @@ public class Application {//implements DisposableBean{
 	}
 
 
-	@Bean("validation")
-	public Validation getValidation()
-	{
-		Validation validation= Validation.getInstance();
-
-		return validation;
-	}
+//	@Bean("validation")
+//	public Validation getValidation()
+//	{
+//		Validation validation= Validation.getInstance();
+//
+//		return validation;
+//	}
 
 	
 
