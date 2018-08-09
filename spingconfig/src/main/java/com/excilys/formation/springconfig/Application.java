@@ -56,7 +56,7 @@ entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "trans
 		"com.excilys.formation.model"
 		})
 @PropertySource("classpath:configuration.properties")
-public class Application {//implements DisposableBean{
+public class Application {
 	
 	static Logger logger = LoggerFactory.getLogger(Application.class);
 
