@@ -41,20 +41,18 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Configuration
 @ComponentScan(basePackages ={
-		"com.excilys.computerdatabase.service",
-		"com.excilys.computerdatabase.ui",
-		"com.excilys.computerdatabase.controller",
-"com.excilys.computerdatabase.springconfig"})
+		"com.excilys.formation.service",
+"com.excilys.formation.spingconfig"})
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages ={
-		"com.excilys.computerdatabase.persistence",
+		"com.excilys.formation.persistence",
 		},
 entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager"
 )
-@PropertySource("classpath:configuration.properties")
 @EntityScan(basePackages ={
-		"com.excilys.computerdatabase.model",
+		"com.excilys.formation.model",
 		})
+@PropertySource("classpath:configuration.properties")
 public class Application {//implements DisposableBean{
 
 	static Logger logger = LoggerFactory.getLogger(Application.class);

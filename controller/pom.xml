@@ -33,11 +33,6 @@
     </dependency>
     
     
-    <dependency>
-    <groupId>com.excilys.formation</groupId>
-      <artifactId>model</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
 
   
     <dependency>

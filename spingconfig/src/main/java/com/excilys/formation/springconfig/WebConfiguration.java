@@ -13,7 +13,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages ={
-		"com.excilys.computerdatabase.controller"})
+		"com.excilys.formation.controller"})
 public class WebConfiguration implements WebMvcConfigurer{
 
 	
