@@ -42,19 +42,22 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @Configuration
 @ComponentScan(basePackages ={
 		"com.excilys.formation.service",
-"com.excilys.formation.spingconfig"})
+		"com.excilys.formation.spingconfig",
+		"com.excilys.formation.controller",
+		})
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages ={
 		"com.excilys.formation.persistence",
+		"com.excilys.formation.service",
 		},
 entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager"
 )
 @EntityScan(basePackages ={
-		"com.excilys.formation.model",
+		"com.excilys.formation.model"
 		})
 @PropertySource("classpath:configuration.properties")
 public class Application {//implements DisposableBean{
-
+	
 	static Logger logger = LoggerFactory.getLogger(Application.class);
 
 	//spring DATA PART
@@ -111,7 +114,7 @@ public class Application {//implements DisposableBean{
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactoryBean.setPackagesToScan("com.excilys.computerdatabase");
+        entityManagerFactoryBean.setPackagesToScan("com.excilys.formation");
         Properties jpaProperties = new Properties();
         //Configures the used database dialect. This allows Hibernate to create SQL
         //that is optimized for the used database.
