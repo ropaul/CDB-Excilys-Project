@@ -18,7 +18,7 @@ public class ControleInitialize extends AbstractAnnotationConfigDispatcherServle
 
 	@Override
 	protected String[] getServletMappings() {
-		return new String[] { "/dashboard", "/addComputer", "/editComputer", "/error" , "/delete"};
+		return new String[] { "/auth/dashboard", "/addComputer", "/editComputer", "/error" , "/delete", "/login"};
 	}
 
 	@Override
