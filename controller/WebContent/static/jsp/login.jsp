@@ -21,25 +21,41 @@
 	</header>
 
 	<section id="main">
-	<div>
-		<h1><spring:message code="login"/></h1>
-   <form name='f' action="login" method='POST'>
-      <table>
-         <tr>
-            <td><spring:message code="user"/>:</td>
-            <td><input type='text' name='username' value=''></td>
-         </tr>
-         <tr>
-            <td><spring:message code="password"/>:</td>
-            <td><input type='password' name='password' /></td>
-         </tr>
-         <tr>
-            <td><input name="submit" type="submit" value="submit" /></td>
-         </tr>
-      </table>
-      </form>
-      </div>
-	</section>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-8 col-xs-offset-2 box">
+				<c:if test="${param.error!=null}">
+					<p class="form-control" style="background:#fba;">${param.error}</p>
+				</c:if>
+				<h1><spring:message code="login"/></h1>
+				<form action="login" method="POST" id="form" name="f" onsubmit="return verifLoginForm();">
+					<fieldset>
+						<div class="form-group">
+							<label for="userName"><spring:message code="userName"/></label> <input
+								type="text" class="form-control" id="username" name="username"
+								placeholder="<spring:message code="userName"/>" onblur="verifNomUser(this)">
+						</div>
+						<div id="userNameError" style="display:none;">
+							<p><spring:message code="error.userName"/></p>
+						</div>
+						<div class="form-group">
+							<label for="password"><spring:message code="password"/></label> <input
+								type="password" class="form-control" id="password" name="password"
+								placeholder="<spring:message code="password"/>" onblur="verifPassword(this)">		
+						</div>
+						<div id="passwordError" style="display:none;">
+								<p><spring:message code="error.password"/></p>
+						</div>
+					</fieldset>
+					<div class="actions pull-right">
+						<input type="submit" value="<spring:message code="login"/>" class="btn btn-primary">
+					</div>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
 
 	<script src="static/js/jquery.min.js"></script>
 	<script src="static/js/bootstrap.min.js"></script>

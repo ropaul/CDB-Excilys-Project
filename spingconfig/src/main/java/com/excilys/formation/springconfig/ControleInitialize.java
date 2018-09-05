@@ -13,7 +13,7 @@ public class ControleInitialize extends AbstractAnnotationConfigDispatcherServle
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class[] { WebConfiguration.class };
+		return new Class[] { WebConfiguration.class, SecurityConfig.class} ;
 	}
 
 	@Override

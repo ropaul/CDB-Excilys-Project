@@ -116,5 +116,24 @@ public class Validation {
 			throw new ValidationException( "Company doesn't exists" );
 		}
 	}
-
+	
+	
+	private void checkName(String name) throws ValidationException {
+		if(name.length() < 1) 
+			throw new ValidationException("The name can't be empty");
+		else if (name.contains(",") || name.contains(";") || name.contains("'"))
+			throw new ValidationException("The name can't contain caracters like ',',';','''");
+	}
+	
+	private void checkPassword(String password) throws ValidationException {
+		if(password.length() < 1) 
+			throw new ValidationException("The name can't be empty");
+		else if (password.contains(",") || password.contains(";") || password.contains("'"))
+			throw new ValidationException("The name can't contain caracters like ',',';','''");
+	}
+	
+	public void checkUserInput(String name, String password) throws ValidationException {
+		checkName(name);
+		checkPassword(password);
+	}
 }

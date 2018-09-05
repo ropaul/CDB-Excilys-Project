@@ -25,7 +25,7 @@ import com.excilys.formation.service.ComputerService;
 public class AddComputerController {
 
 	
-	public static final String VUE          = "/static/jsp/addComputer.jsp";
+	public static final String VUE = "/static/jsp/addComputer.jsp";
 	public static final String NAME  = "name";
 	public static final String INTRODUCED   = "introduced";
 	public static final String DISCONTINUED = "discontinued";

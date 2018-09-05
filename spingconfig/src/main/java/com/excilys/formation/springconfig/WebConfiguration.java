@@ -3,6 +3,8 @@ package com.excilys.formation.springconfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,8 +19,11 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 @EnableWebMvc
 @Configuration
 @EnableWebSecurity
+@Import({SecurityConfig.class})
 @ComponentScan(basePackages ={
-		"com.excilys.formation.controller"})
+		"com.excilys.formation.controller",
+		"com.excilys.formation.spingconfig"})
+//@ImportResource({"classpath:springSecurityConfig.xml"})
 public class WebConfiguration implements WebMvcConfigurer{
 
 	
@@ -27,10 +32,10 @@ public class WebConfiguration implements WebMvcConfigurer{
 	
 	@Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/auth/dashboard").setViewName("dashboard");
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/add").setViewName("add");
-        registry.addViewController("/edit").setViewName("edit");
+        registry.addViewController("WebContent/static/jsp/dashboard.jsp").setViewName("dashboard");
+        registry.addViewController("WebContent/static/jsp/login.jsp").setViewName("login");
+        registry.addViewController("WebContent/static/jsp/addComputer.jsp").setViewName("add");
+        registry.addViewController("WebContent/static/jsp/editComputer.jsp").setViewName("edit");
     }
 	
 	//MVC

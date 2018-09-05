@@ -60,7 +60,10 @@ public class Application {
 	
 	static Logger logger = LoggerFactory.getLogger(Application.class);
 
-	//spring DATA PART
+	
+	
+	
+	//spring DATA 
 	private static final String INIT_MESSAGE = "Initiate...";
 	private static final String ACK_MESSAGE = "OK";
 		
@@ -139,8 +142,6 @@ public class Application {
         return entityManagerFactoryBean;
     }
     
-    
-   
     
     @Bean
     JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {

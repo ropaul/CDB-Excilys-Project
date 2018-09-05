@@ -38,6 +38,33 @@ $form.validate({
 });
 
 
+function verifNomUser(champ) {
+	if(champ.value.length < 1) {
+		document.getElementById("userNameError").style.display = "block";
+		surligne(champ,true);
+		return false;
+	} else {
+		document.getElementById("userNameError").style.display = "none";
+		surligne(champ,false);
+		return true;
+	}
+}
+function verifPassword(champ) {
+	if(champ.value.length < 1) {
+		document.getElementById("passwordError").style.display = "block";
+		surligne(champ,true);
+		return false;
+	} else {
+		document.getElementById("passwordError").style.display = "none";
+		surligne(champ,false);
+		return true;
+	}
+}
+function verifLoginForm() {
+	var nomOk = verifNomUser(document.forms["form"]["userName"]);
+	var passwordOk = verifPassword(document.forms["form"]["password"]);
+	return nomOk && passwordOk;
+}
 
 function surligne(champ, erreur) {
 	   if(erreur)
