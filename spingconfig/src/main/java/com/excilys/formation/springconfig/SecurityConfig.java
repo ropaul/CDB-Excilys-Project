@@ -26,22 +26,22 @@ import com.excilys.formation.service.UserService;
 @ComponentScan(basePackages ={
 		"com.excilys.formation.controller",
 "com.excilys.formation.spingconfig"})
-@ImportResource({"classpath:springSecurityConfig.xml"})
+//@ImportResource({"classpath:springSecurityConfig.xml"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 	@Autowired
 	UserService userService;
 
+
 	@Autowired
 	protected void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userService);
 		auth.authenticationProvider(getProvider());
-
 	}
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	protected void configure(HttpSecurity http) throws Exception  {
 		http.csrf()
 		.and()
 		.authorizeRequests()
@@ -72,19 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-
-	public static void main(String[] arg) {
-		switch(6) {
-		default :
-			System.out.println("h");
-		case 5 :
-			System.out.println("t");
-		}
-		String tiger = "tiger";
-		String tigre = 255>300? "truc": (tiger = "truc2")  ;
-		System.out.println(tigre);
-		
 	}
 
 

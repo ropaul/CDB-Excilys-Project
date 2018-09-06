@@ -15,6 +15,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
@@ -56,6 +57,7 @@ entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "trans
 		"com.excilys.formation.model"
 		})
 @PropertySource("classpath:configuration.properties")
+@Import({SecurityConfig.class, WebConfiguration.class})
 public class Application {
 	
 	static Logger logger = LoggerFactory.getLogger(Application.class);
@@ -178,7 +180,6 @@ public class Application {
 	@Bean
 	public ViewResolver viewResolver() {
 		InternalResourceViewResolver bean = new InternalResourceViewResolver();
-
 		bean.setViewClass(JstlView.class);
 		bean.setPrefix("/static/jsp/");
 		bean.setSuffix(".jsp");

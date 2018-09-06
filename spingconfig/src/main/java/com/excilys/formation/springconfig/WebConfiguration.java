@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -30,19 +31,26 @@ public class WebConfiguration implements WebMvcConfigurer{
 	//SECURITY
 	
 	
-	@Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("WebContent/static/jsp/dashboard.jsp").setViewName("dashboard");
-        registry.addViewController("WebContent/static/jsp/login.jsp").setViewName("login");
-        registry.addViewController("WebContent/static/jsp/addComputer.jsp").setViewName("add");
-        registry.addViewController("WebContent/static/jsp/editComputer.jsp").setViewName("edit");
-    }
+//	@Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("WebContent/static/jsp/dashboard.jsp");//.setViewName("/dashboard");
+//        registry.addViewController("WebContent/static/jsp/login.jsp");//.setViewName("login");
+//        registry.addViewController("WebContent/static/jsp/addComputer.jsp");//.setViewName("add");
+//        registry.addViewController("WebContent/static/jsp/editComputer.jsp");//.setViewName("edit");
+//    }
 	
 	//MVC
-//	@Override
-//	public void addViewControllers(ViewControllerRegistry registry) {
-//	      registry.addViewController("WebContent/static/jsp/dashboard.jsp");
-//	   }
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+	      registry.addViewController("WebContent/static/jsp/dashboard.jsp");
+	   }
+	
+	@Override
+	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/**").addResourceLocations("/");
+	}
+
+	
 	
 	@Bean
     public LocaleChangeInterceptor localeInterceptor(){

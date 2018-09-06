@@ -1,5 +1,7 @@
 package com.excilys.formation.springconfig;
 
+import javax.servlet.ServletRegistration;
+
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -18,7 +20,7 @@ public class ControleInitialize extends AbstractAnnotationConfigDispatcherServle
 
 	@Override
 	protected String[] getServletMappings() {
-		return new String[] { "/auth/dashboard", "/addComputer", "/editComputer", "/error" , "/delete", "/login"};
+		return new String[] { "/dashboard", "/addComputer", "/editComputer", "/error" , "/delete", "/login"};
 	}
 
 	@Override
@@ -27,4 +29,13 @@ public class ControleInitialize extends AbstractAnnotationConfigDispatcherServle
 		dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
 		return dispatcherServlet;
 	}
+	
+	
+	@Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration)
+    {
+        super.customizeRegistration(registration);
+        registration.setLoadOnStartup(1);
+    }
+	
 }

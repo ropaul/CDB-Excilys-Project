@@ -20,7 +20,7 @@ import com.excilys.formation.service.ComputerService;
 
 
 @Controller
-@RequestMapping("/auth/dashboard")
+@RequestMapping("/dashboard")
 public class DashboardController {
 	
 	private ComputerPage page;
