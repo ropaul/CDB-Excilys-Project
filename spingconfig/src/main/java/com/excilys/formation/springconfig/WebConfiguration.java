@@ -31,19 +31,19 @@ public class WebConfiguration implements WebMvcConfigurer{
 	//SECURITY
 	
 	
-//	@Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("WebContent/static/jsp/dashboard.jsp");//.setViewName("/dashboard");
-//        registry.addViewController("WebContent/static/jsp/login.jsp");//.setViewName("login");
-//        registry.addViewController("WebContent/static/jsp/addComputer.jsp");//.setViewName("add");
-//        registry.addViewController("WebContent/static/jsp/editComputer.jsp");//.setViewName("edit");
-//    }
+	@Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("WebContent/static/jsp/dashboard.jsp").setViewName("dashboard");
+        registry.addViewController("WebContent/static/jsp/login.jsp").setViewName("login");
+        registry.addViewController("WebContent/static/jsp/addComputer.jsp").setViewName("add");
+        registry.addViewController("WebContent/static/jsp/editComputer.jsp").setViewName("edit");
+    }
 	
 	//MVC
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-	      registry.addViewController("WebContent/static/jsp/dashboard.jsp");
-	   }
+//	@Override
+//	public void addViewControllers(ViewControllerRegistry registry) {
+//	      registry.addViewController("WebContent/static/jsp/dashboard.jsp");
+//	   }
 	
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {

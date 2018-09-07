@@ -22,7 +22,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         Objects.requireNonNull(name);
         return userDaoHibernate.findUserWithName(name)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + name));
     }
 
+   
+    
 }

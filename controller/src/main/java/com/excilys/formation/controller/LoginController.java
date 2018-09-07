@@ -3,6 +3,7 @@ package com.excilys.formation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,7 @@ import com.excilys.formation.service.UserService;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-
+     
 	public static final String NAME  = "name";
 	public static final String PASSWORD  = "password";
 
@@ -27,6 +28,9 @@ public class LoginController {
 	
 	@Autowired
 	Validation validation;
+	
+	@Autowired
+	AuthenticationProvider authentication;
 
 //	@RequestMapping(method = RequestMethod.POST)
 //	public String home(ModelMap model,@RequestParam(name = NAME,required = false) String name,
@@ -42,11 +46,11 @@ public class LoginController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView home(ModelMap model) {
 		
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (!(auth instanceof AnonymousAuthenticationToken)) {
-//            return new ModelAndView("redirect:/dashboard");
-//        }
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            return new ModelAndView("redirect:/dashboard");
+        }
         return new ModelAndView("login");
 	}
 	

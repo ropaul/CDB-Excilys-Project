@@ -10,12 +10,12 @@ public class ControleInitialize extends AbstractAnnotationConfigDispatcherServle
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { Application.class};
+		return new Class[] { Application.class,  SecurityConfig.class};
 	}
 
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class[] { WebConfiguration.class, SecurityConfig.class} ;
+		return new Class[] { WebConfiguration.class} ;
 	}
 
 	@Override
