@@ -1,11 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="dashboard.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -16,15 +10,27 @@
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
-	<div>
-		<a class="navbar-brand" href="dashboard"> <spring:message
-				code="dashboard.subtitle" /></a> <a class="navbar-brand pull-right"
-			href="?lang=<spring:message code="alter_language"/>"> <img
-			src="static/image/flag_<spring:message code="alter_language"/>.png"
-			style="height: 50dp; width: 50dp; margin: 15dp;"
-			alt=<spring:message code="alter_language"/> /></a>
-	</div>
-	</header>
+		<%-- <div class="container">
+			<a class="navbar-brand" href="dashboard"> <spring:message code="dashboard.subtitle" /></a>
+		</div> --%>
+		<div>
+			<a class="navbar-brand" href="dashboard"> <spring:message
+					code="dashboard.subtitle" /></a> <a class="navbar-brand pull-right"
+				href="?lang=<spring:message code="alter_language"/>"> <img
+				src="static/image/flag_<spring:message code="alter_language"/>.png"
+				style="height: 50dp; width: 50dp; margin: 15dp;"
+				alt=<spring:message code="alter_language"/> /></a>
 
-</body>
-</html>
+			<form id="logout" action="logout" method="POST">
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</form>
+			<div class="navbar-brand pull-right"
+				style="margin-left: 15px; margin-top: -5px">
+				<c:if test="${pageContext.request.userPrincipal.name != null}">
+					<a href="javascript:document.getElementById('logout').submit()"
+						class="btn btn-primary">Logout</a>
+				</c:if>
+			</div>
+		</div>
+	</header>
